@@ -19,6 +19,12 @@ if [ "$(which keychain 2>/dev/null)" ]; then
   eval `keychain --ignore-missing -q --eval ~/.ssh/id_rsa ~/.ssh/id_dsa`
 fi
 
+# TMUX
+if we_have tmux; then
+  # if not inside a tmux session, and if no session is started, start a new session
+  test -z "$TMUX" && (tmux attach || tmux new-session)
+fi
+
 #export CDPATH=.:$HOME/work
 
 #if [ "$DISPLAY" ]; then
