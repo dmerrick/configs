@@ -1,15 +1,12 @@
-*.CUE
-*.DAT
-*.JPG
-*.JPG
-*.LOG
 *.ac3
 *.accurip
 *.avi
 *.cbr
 *.cbz
 *.cfg
+*.CUE
 *.cue
+*.DAT
 *.diz
 *.djvu
 *.dmg
@@ -24,7 +21,10 @@
 *.iso
 *.jar
 *.jpeg
+*.JPG
+*.JPG
 *.jpg
+*.LOG
 *.log
 *.m3u
 *.m3u8
@@ -55,7 +55,6 @@
 *.what
 *.xlsx
 *.zip
-*Toolbox*for*
 .DS_Store
 INSTALL
 README
