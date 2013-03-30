@@ -8,7 +8,7 @@
   * install chrome
       * sign in with google account
   * install dropbox
-    * log in
+      * log in
 
 ---
 
