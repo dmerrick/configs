@@ -45,7 +45,7 @@
 * open app store
   * log in
   * install xcode
-    * install xcode tools
+     * install xcode tools
   * install cloud
     * log in
 * install homebrew
