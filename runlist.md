@@ -62,19 +62,20 @@
 
 ---
 
-* install VLC
-* install last.fm scrobbler
-* install f.lux
-* install propane
-* install hipchat
-* install skype
-* install cyberduck
-* install fuzzyclock
-  * set to fluid english
-  * disable system clock
-* install gitx
-  * enable terminal usage
-* install virtualbox
+* open safari
+  * install VLC
+  * install last.fm scrobbler
+  * install f.lux
+  * install propane
+  * install hipchat
+  * install skype
+  * install cyberduck
+  * install fuzzyclock
+    * set to fluid english
+    * disable system clock
+  * install gitx
+    * enable terminal usage
+  * install virtualbox
 
 ---
 
