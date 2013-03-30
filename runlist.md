@@ -6,7 +6,7 @@
 
 * open safari
   * install chrome
-    * sign in with google account
+      * sign in with google account
   * install dropbox
     * log in
 
