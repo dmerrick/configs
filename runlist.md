@@ -36,9 +36,9 @@
      * install browser extensions
   * install sublime text
   * install iterm2
-    * generate ssh key pair
-    * `mkdir ~/other_projects`
-    * `mkdir ~/work`
+     * generate ssh key pair
+     * `mkdir ~/other_projects`
+     * `mkdir ~/work`
 
 ---
 
