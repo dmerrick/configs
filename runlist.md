@@ -46,15 +46,15 @@
   * install xcode
      * install xcode tools
   * install cloud
-    * log in
+     * log in
 * install homebrew
   * run `brew doctor`
-  * brew install git
+  * `brew install git`
 * install rvm
 * github
   * add new pubkey
   * clone configs repo
-    * run `setup.sh`
+     * run `setup.sh`
   * clone git-prompt repo
 * bithub
   * add new pubkey
