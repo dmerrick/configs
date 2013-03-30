@@ -86,4 +86,5 @@
   * tickermenu
   * transmission
 * empty downloads directory
+* reboot
  
