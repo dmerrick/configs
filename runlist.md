@@ -32,8 +32,8 @@
 
 * open safari
   * install 1password
-    * locate keychain in dropbox folder
-    * install browser extensions
+     * locate keychain in dropbox folder
+     * install browser extensions
   * install sublime text
   * install iterm2
     * generate ssh key pair
