@@ -72,10 +72,10 @@
   * install skype
   * install cyberduck
   * install fuzzyclock
-    * set to fluid english
-    * disable system clock
+     * set to fluid english
+     * disable system clock
   * install gitx
-    * enable terminal usage
+     * enable terminal usage
   * install virtualbox
 
 ---
