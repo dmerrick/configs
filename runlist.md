@@ -7,7 +7,6 @@
 * open safari
   * install chrome
       * sign in with google account
-
   * install dropbox
       * log in
 
@@ -36,7 +35,7 @@
      * install browser extensions
   * install sublime text
   * install iterm2
-     * generate ssh key pair
+     * run `ssh-keygen -b 4096`
      * `mkdir ~/other_projects`
      * `mkdir ~/work`
 
