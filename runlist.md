@@ -7,6 +7,7 @@
 * open safari
   * install chrome
       * sign in with google account
+
   * install dropbox
       * log in
 
@@ -21,10 +22,10 @@
      * enable remote login
      * set name if required
   * desktop & screen saver
-    * configure dropbox wallpaper folder
+     * configure dropbox wallpaper folder
   * security
-    * turn on screensaver password
-    * turn on filevault
+     * turn on screensaver password
+     * turn on filevault
 * reboot
 
 ---
