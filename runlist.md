@@ -19,6 +19,7 @@
   * sharing
      * enable screen sharing
      * enable remote login
+     * enable file sharing
      * set name if required
   * desktop & screen saver
      * configure dropbox wallpaper folder
