@@ -50,7 +50,7 @@
      * log in
 * install homebrew
   * run `brew doctor`
-  * `brew install git wget tmux`
+  * `brew install git wget tmux mobile-shell`
   * `brew tap homebrew/dupes`
   * `brew install rsync`
 * install rvm
