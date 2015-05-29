@@ -4,11 +4,18 @@
 
 ---
 
-* open safari
+* open Terminal
+  * run homebrew install script
+    * `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+    * install command line tools
+  * install homebrew cask
+    * `brew install caskroom/cask/brew-cask`
   * install chrome
-      * sign in with google account
-  * install dropbox
-      * log in
+    * `brew cask install google-chrome`
+    * sign in with google account
+  * install bittorrent-sync
+    * `brew cask install bittorrent-sync`
+    * set up
 
 ---
 
@@ -30,15 +37,15 @@
 
 ---
 
-* open safari
-  * install 1password
-     * locate keychain in dropbox folder
-     * install browser extensions
-  * install sublime text
-  * install iterm2
-     * run `ssh-keygen -b 4096`
-     * `mkdir ~/other_projects`
-     * `mkdir ~/work`
+* install 1password
+  * `brew cask install 1password`
+  * locate keychain in sync folder
+  * install browser extensions
+* install iterm2
+   * `brew cask install iterm2`
+   * run `ssh-keygen -b 4096`
+   * `mkdir ~/other_projects`
+   * `mkdir ~/work`
 
 ---
 
@@ -48,22 +55,24 @@
      * install xcode tools
   * install cloud
      * log in
-* install homebrew
-  * run `brew doctor`
+     * turn on "auto upload screenshots"
+* install command line apps
   * `brew install git wget tmux mobile-shell`
   * `brew tap homebrew/dupes`
   * `brew install rsync`
 * install rvm
-* github
+  * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
+  * `\curl -sSL https://get.rvm.io | bash -s stable`
+* log in to github
   * add new pubkey
   * clone configs repo
      * run `setup.sh`
   * clone git-prompt repo
-* bithub
-  * add new pubkey
-  * clone required projects
 
 ---
+
+caffeine electric-sheep flux macvim slack spectacle transmit
+chefdk hipchat packer vagrant virtualbox
 
 * open safari
   * install gitx
