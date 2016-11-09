@@ -1,11 +1,12 @@
 ### Dana's Workstation Runlist
 
-* don't turn on FileVault yet
+* don't turn on filevault yet
+  * it takes a while and you can't run updates until it's done
 * check for/install updates
 
 ---
 
-* open Terminal
+* open terminal
   * run homebrew install script
     * `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
   * install chrome
@@ -13,7 +14,7 @@
     * sign in with google account
   * install resilio-sync & 1password
     * `brew cask install resilio-sync 1password`
-    * set up sync
+    * set up resilio-sync
     * set up 1password
       * install browser extensions if necessary
 
@@ -25,7 +26,7 @@
      * enable remote login
      * enable file sharing
      * set name if required
-  * icloud
+  * ibutt
      * turn on back to my mac
   * desktop & screen saver
      * configure resilio wallpaper folder
