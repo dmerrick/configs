@@ -77,12 +77,20 @@
 ---
 
 * open iterm
-  * run `brew cask install electric-sheep flux macvim spectacle transmit gitx vlc lastfm mac2imgur macid messenger rescuetime`
+  * run `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime`
 * open system preferences
   * set up electic sheep
-* open gitx
-  * enable terminal usage
+* open rescuetime
+  * set up
+* open sepectacle
+  * set up
 * open lastfm
+  * set up
+* open flux
+  * set up
+* open mac2imgur
+  * set up
+* open macid
   * set up
 
 ---
