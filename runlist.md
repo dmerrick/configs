@@ -65,28 +65,31 @@
 
 ---
 
-electric-sheep flux macvim slack spectacle transmit
-chefdk hipchat packer vagrant virtualbox
+* open iterm
+  * run `brew cask install electric-sheep flux macvim spectacle transmit gitx vlc lastfm`
+* open system preferences
+  * set up electic sheep
+* open gitx
+  * enable terminal usage
+* open lastfm
+  * set up
+
+---
+
+* open iterm
+  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox`
+    * if necessary
+
+---
 
 * open safari
-  * install gitx
-     * enable terminal usage
-  * install f.lux
-  * install propane
-  * install hipchat
-  * install skype
-  * install cyberduck
-  * install VLC
-  * install last.fm scrobbler
   * install fuzzyclock
      * set to fluid english
      * disable system clock
-  * install virtualbox
 
 ---
 
 * optional
-  * install macvim
   * spotify
   * steam
   * plex media server
