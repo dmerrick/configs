@@ -11,37 +11,34 @@
   * install chrome
     * `brew cask install google-chrome`
     * sign in with google account
-  * install bittorrent-sync & 1password
+  * install resilio-sync & 1password
     * `brew cask install resilio-sync 1password`
-    * set up
+    * set up sync
+    * set up 1password
+      * install browser extensions if necessary
 
 ---
 
 * open system preferences
-  * ibutt
-     * log in
-     * turn on back to my mac and find my mac
   * sharing
      * enable screen sharing
      * enable remote login
      * enable file sharing
      * set name if required
+  * icloud
+     * turn on back to my mac
   * desktop & screen saver
-     * configure dropbox wallpaper folder
+     * configure resilio wallpaper folder
   * security
      * turn on screensaver password
      * turn on filevault
 * reboot
 
 ---
-
-* install 1password
-  * `brew cask install 1password`
-  * locate keychain in sync folder
-  * install browser extensions
+  
 * install iterm2
    * `brew cask install iterm2`
-   * run `ssh-keygen -b 4096`
+   * run `ssh-keygen -t ecdsa -b 521`
    * `mkdir ~/other_projects`
    * `mkdir ~/work`
 
