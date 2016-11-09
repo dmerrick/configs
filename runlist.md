@@ -26,7 +26,7 @@
      * enable remote login
      * enable file sharing
      * set name if required
-  * ibutt
+  * icloud
      * turn on back to my mac
   * desktop & screen saver
      * configure resilio wallpaper folder
@@ -47,27 +47,23 @@
 
 * open app store
   * log in
-  * install xcode
-     * install xcode tools
-  * install butt
-     * log in
-     * turn on "auto upload screenshots"
 * install command line apps
-  * `brew install git wget tmux mobile-shell`
+  * `brew install git wget gpg tmux mobile-shell`
   * `brew tap homebrew/dupes`
   * `brew install rsync`
 * install rvm
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
   * `\curl -sSL https://get.rvm.io | bash -s stable`
 * log in to github
-  * add new pubkey
-  * clone configs repo
+  * add new [pubkey](https://github.com/settings/keys)
+  * clone [configs repo](https://github.com/dmerrick/configs)
+     * run `rm ~/.bashrc ~/.bash_profile`
      * run `setup.sh`
-  * clone git-prompt repo
+  * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
 
 ---
 
-caffeine electric-sheep flux macvim slack spectacle transmit
+electric-sheep flux macvim slack spectacle transmit
 chefdk hipchat packer vagrant virtualbox
 
 * open safari
