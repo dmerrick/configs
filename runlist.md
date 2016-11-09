@@ -26,7 +26,7 @@
      * enable remote login
      * enable file sharing
      * set name if required
-  * icloud
+  * ibutt
      * turn on back to my mac
   * desktop & screen saver
      * configure resilio wallpaper folder
@@ -42,6 +42,8 @@
    * run `ssh-keygen -t ecdsa -b 521`
    * `mkdir ~/other_projects`
    * `mkdir ~/work`
+   * `brew install bash`
+     * set default profile login command to `/usr/local/bin/bash`
 
 ---
 
