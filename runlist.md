@@ -83,7 +83,7 @@
   * set up electic sheep
 * open rescuetime
   * set up
-* open sepectacle
+* open spectacle
   * set up
 * open lastfm
   * set up
@@ -97,7 +97,7 @@
 ---
 
 * install work stuff if necessary
-  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres`
+  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres # etc...`
 
 ---
 
