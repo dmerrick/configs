@@ -59,7 +59,8 @@
   * clone [configs repo](https://github.com/dmerrick/configs)
      * run `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
-     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+  * set up vim
+     * run `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
   * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
   
   
