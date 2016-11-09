@@ -54,12 +54,14 @@
 * install rvm
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
   * `\curl -sSL https://get.rvm.io | bash -s stable`
-* set up github
+* set up environment
   * add new [pubkey](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
      * run `rm ~/.bashrc ~/.bash_profile`
-     * run `setup.sh`
+     * `setup.sh`
+     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
   * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
+  
   
 ---
 
