@@ -1,26 +1,24 @@
 ### Dana's Workstation Runlist
 
+* don't turn on FileVault yet
 * check for/install updates
 
 ---
 
 * open Terminal
   * run homebrew install script
-    * `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
-    * install command line tools
-  * install homebrew cask
-    * `brew install caskroom/cask/brew-cask`
+    * `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
   * install chrome
     * `brew cask install google-chrome`
     * sign in with google account
-  * install bittorrent-sync
-    * `brew cask install bittorrent-sync`
+  * install bittorrent-sync & 1password
+    * `brew cask install resilio-sync 1password`
     * set up
 
 ---
 
 * open system preferences
-  * icloud
+  * ibutt
      * log in
      * turn on back to my mac and find my mac
   * sharing
@@ -53,7 +51,7 @@
   * log in
   * install xcode
      * install xcode tools
-  * install cloud
+  * install butt
      * log in
      * turn on "auto upload screenshots"
 * install command line apps
