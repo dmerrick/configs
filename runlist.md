@@ -75,7 +75,7 @@
 ---
 
 * open iterm
-  * run `brew cask install electric-sheep flux macvim spectacle transmit gitx vlc lastfm`
+  * run `brew cask install electric-sheep flux macvim spectacle transmit gitx vlc lastfm mac2imgur macid messenger rescuetime`
 * open system preferences
   * set up electic sheep
 * open gitx
@@ -86,7 +86,7 @@
 ---
 
 * install work stuff if necessary
-  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox`
+  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres`
 
 ---
 
@@ -98,11 +98,9 @@
 ---
 
 * optional
-  * spotify
-  * steam
-  * plex media server
-  * tickermenu
-  * transmission
+  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission`
+  * plex
+
 * empty downloads directory
 * reboot
  
