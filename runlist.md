@@ -47,8 +47,6 @@
 
 ---
 
-* open app store
-  * log in
 * install command line apps
   * `brew install git wget gpg tmux mobile-shell`
   * `brew tap homebrew/dupes`
@@ -56,12 +54,23 @@
 * install rvm
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
   * `\curl -sSL https://get.rvm.io | bash -s stable`
-* log in to github
+* set up github
   * add new [pubkey](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
      * run `rm ~/.bashrc ~/.bash_profile`
      * run `setup.sh`
   * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
+  
+---
+
+* set up workspace
+  * run `rvm install 2.3 # or whatever is latest`
+  * `rvm --default use 2.3`
+  * `rvm @global do gem install tmuxinator lolcat`
+  * open iterm
+    * duplicate default iterm profile
+    * call it 'Workspace', set as default
+    * send text at start: `mux s workspace`
 
 ---
 
@@ -76,9 +85,8 @@
 
 ---
 
-* open iterm
+* install work stuff if necessary
   * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox`
-    * if necessary
 
 ---
 
