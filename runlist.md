@@ -70,6 +70,7 @@
   * run `rvm install 2.3 # or whatever is latest`
   * `rvm --default use 2.3`
   * `rvm @global do gem install tmuxinator lolcat`
+  * `brew install reattach-to-user-namespace`
   * open iterm
     * duplicate default iterm profile
     * call it 'Workspace', set as default
