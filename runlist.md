@@ -40,7 +40,7 @@
 * install iterm2
    * `brew cask install iterm2`
    * `ssh-keygen -t ecdsa -b 521`
-   * `mkdir ~/other_projects`
+   * `mkdir -p ~/other_projects`
    * `brew install bash`
      * set default profile login command to `/usr/local/bin/bash`
 
@@ -100,15 +100,13 @@
 ---
 
 * install work stuff if necessary
+  * `mkdir -p ~/work`
   * `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres # etc...`
 
 ---
 
-
 * optional
-  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission`
-  * plex
-
+  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission plex-media-player`
 * empty downloads directory
 * reboot
  
