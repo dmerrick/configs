@@ -79,7 +79,7 @@
 ---
 
 * open iterm
-  * `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime fuzzyclock`
+  * `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid rescuetime fuzzyclock`
 * open rescuetime
   * set up
 * open flux
@@ -95,6 +95,7 @@
 * open system preferences
   * set up electic sheep
   * disable system clock
+  * add fuzzyclock to startup items
 
 ---
 
