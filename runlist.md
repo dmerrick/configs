@@ -82,14 +82,8 @@
 ---
 
 * open iterm
-  * run `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime`
-* open system preferences
-  * set up electic sheep
+  * run `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime fuzzyclock`
 * open rescuetime
-  * set up
-* open spectacle
-  * set up
-* open lastfm
   * set up
 * open flux
   * set up
@@ -97,6 +91,13 @@
   * set up
 * open macid
   * set up
+* open lastfm
+  * set up
+* open spectacle
+* open fuzzyclock
+* open system preferences
+  * set up electic sheep
+  * disable system clock
 
 ---
 
@@ -105,12 +106,6 @@
 
 ---
 
-* open safari
-  * install fuzzyclock
-     * set to fluid english
-     * disable system clock
-
----
 
 * optional
   * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission`
