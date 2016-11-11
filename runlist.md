@@ -39,7 +39,7 @@
   
 * install iterm2
    * `brew cask install iterm2`
-   * run `ssh-keygen -t ecdsa -b 521`
+   * `ssh-keygen -t ecdsa -b 521`
    * `mkdir ~/other_projects`
    * `mkdir ~/work`
    * `brew install bash coreutils`
@@ -57,10 +57,10 @@
 * set up environment
   * add new [pubkey](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
-     * run `rm ~/.bashrc ~/.bash_profile`
+     * `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
   * set up vim
-     * run `brew install vim`
+     * `brew install vim`
      * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
      * open vim
        * run `:PluginInstall`
@@ -70,7 +70,7 @@
 ---
 
 * set up workspace
-  * run `rvm install 2.3 # or whatever is latest`
+  * `rvm install 2.3 # or whatever is latest`
   * `rvm --default use 2.3`
   * `rvm @global do gem install tmuxinator lolcat`
   * `brew install reattach-to-user-namespace watch`
@@ -82,7 +82,7 @@
 ---
 
 * open iterm
-  * run `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime fuzzyclock`
+  * `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid messenger rescuetime fuzzyclock`
 * open rescuetime
   * set up
 * open flux
@@ -102,7 +102,7 @@
 ---
 
 * install work stuff if necessary
-  * run `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres # etc...`
+  * `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres # etc...`
 
 ---
 
