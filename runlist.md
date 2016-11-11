@@ -22,11 +22,11 @@
 
 * open system preferences
   * sharing
+     * set hostname
      * enable screen sharing
      * enable remote login
      * enable file sharing
-     * set name if required
-  * ibutt
+  * icloud
      * turn on back to my mac
   * desktop & screen saver
      * configure resilio wallpaper folder
@@ -41,26 +41,23 @@
    * `brew cask install iterm2`
    * `ssh-keygen -t ecdsa -b 521`
    * `mkdir ~/other_projects`
-   * `mkdir ~/work`
-   * `brew install bash coreutils`
+   * `brew install bash`
      * set default profile login command to `/usr/local/bin/bash`
 
 ---
 
 * install command line apps
-  * `brew install git wget gpg tmux mobile-shell`
-  * `brew tap homebrew/dupes`
-  * `brew install rsync`
+  * `brew install git wget gpg tmux mobile-shell coreutils vim`
+  * `brew tap homebrew/dupes && brew install rsync`
 * install rvm
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
-  * `\curl -sSL https://get.rvm.io | bash -s stable`
+  * `curl -sSL https://get.rvm.io | bash -s stable`
 * set up environment
   * add new [pubkey](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
   * set up vim
-     * `brew install vim`
      * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
      * open vim
        * run `:PluginInstall`
