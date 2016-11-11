@@ -42,7 +42,7 @@
    * run `ssh-keygen -t ecdsa -b 521`
    * `mkdir ~/other_projects`
    * `mkdir ~/work`
-   * `brew install bash`
+   * `brew install bash coreutils`
      * set default profile login command to `/usr/local/bin/bash`
 
 ---
@@ -60,7 +60,10 @@
      * run `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
   * set up vim
-     * run `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+     * run `brew install vim`
+     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+     * open vim
+       * run `:PluginInstall`
   * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
   
   
