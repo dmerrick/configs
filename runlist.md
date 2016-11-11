@@ -26,7 +26,7 @@
      * enable screen sharing
      * enable remote login
      * enable file sharing
-  * icloud
+  * ibutt
      * turn on back to my mac
   * desktop & screen saver
      * configure resilio wallpaper folder
@@ -53,7 +53,7 @@
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
   * `curl -sSL https://get.rvm.io | bash -s stable`
 * set up environment
-  * add new [pubkey](https://github.com/settings/keys)
+  * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
