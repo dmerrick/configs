@@ -47,8 +47,7 @@
 ---
 
 * install command line apps
-  * `brew install git wget gpg tmux mobile-shell coreutils vim`
-  * `brew tap homebrew/dupes && brew install rsync`
+  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync`
 * install rvm
   * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
   * `curl -sSL https://get.rvm.io | bash -s stable`
