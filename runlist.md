@@ -71,25 +71,21 @@
   * `rvm install 2.6 # or whatever is latest`
   * `rvm --default use 2.6`
   * `rvm @global do gem install tmuxinator lolcat`
-  * `brew install reattach-to-user-namespace watch`
+  * `brew install reattach-to-user-namespace watch neofetch`
   * open iterm
-    * duplicate default iterm profile
-    * call it 'Workspace', set as default
-    * send text at start: `mux s workspace`
+    * go to preferences
+    * enable "Load preferences from folder" and "save changes to folder on exit"
+    * send text at start: `tmuxinator s workspace`
 
 ---
 
 * open iterm
-  * `brew cask install electric-sheep flux macvim spectacle transmit vlc lastfm mac2imgur macid rescuetime fuzzyclock`
+  * `brew cask install electric-sheep flux spectacle transmit vlc mac2imgur rescuetime fuzzyclock omnifocus`
 * open rescuetime
   * set up
 * open flux
   * set up
 * open mac2imgur
-  * set up
-* open macid
-  * set up
-* open lastfm
   * set up
 * open spectacle
 * open fuzzyclock
@@ -107,7 +103,7 @@
 ---
 
 * optional
-  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission plex-media-player`
+  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower steam tunnelblick`
 * empty downloads directory
 * reboot
  
