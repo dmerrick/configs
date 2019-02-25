@@ -1,8 +1,11 @@
 ### Dana's Workstation Runlist
 
-* don't turn on filevault yet
-  * it takes a while and you can't run updates until it's done
-* check for/install updates
+* go through new user flow
+  * log in to iCloud
+    * do _not_ enable iCloud Keychain
+  * don't turn on filevault yet
+    * it takes a while and you can't run updates until it's done
+  * check for/install updates
 
 ---
 
@@ -25,14 +28,13 @@
      * set hostname
      * enable screen sharing
      * enable remote login
-     * enable file sharing
-  * ibutt
-     * turn on back to my mac
-  * desktop & screen saver
-     * configure resilio wallpaper folder
+  * iCloud
+     * turn on/off services as needed
   * security
      * turn on screensaver password
      * turn on filevault
+     * enable location services
+     * allow Apple Watch to unlock
 * reboot
 
 ---
