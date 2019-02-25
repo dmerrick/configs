@@ -50,9 +50,6 @@
 
 * install command line apps
   * `brew install git wget gpg tmux mobile-shell coreutils vim rsync`
-* install rvm
-  * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
-  * `curl -sSL https://get.rvm.io | bash -s stable`
 * set up environment
   * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
@@ -68,8 +65,11 @@
 ---
 
 * set up workspace
-  * `rvm install 2.3 # or whatever is latest`
-  * `rvm --default use 2.3`
+  * install rvm
+    * `gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3`
+    * `curl -sSL https://get.rvm.io | bash -s stable`
+  * `rvm install 2.6 # or whatever is latest`
+  * `rvm --default use 2.6`
   * `rvm @global do gem install tmuxinator lolcat`
   * `brew install reattach-to-user-namespace watch`
   * open iterm
