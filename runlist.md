@@ -5,7 +5,7 @@
     * do _not_ enable iCloud Keychain
   * don't turn on filevault yet
     * it takes a while and you can't run updates until it's done
-  * check for/install updates
+* check for/install updates
 
 ---
 
@@ -35,7 +35,7 @@
      * turn on filevault
      * enable location services
      * allow Apple Watch to unlock
-* reboot
+* reboot if filevault turned on
 
 ---
   
@@ -49,12 +49,15 @@
 ---
 
 * install command line apps
-  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync`
+  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync jq`
 * set up environment
   * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
      * `setup.sh`
+   * add new key to authorized_keys
+     * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
+     * `cd ~/configs && git commit authorized_keys`
   * set up vim
      * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
      * open vim
@@ -87,6 +90,8 @@
   * set up
 * open mac2imgur
   * set up
+* open omnifocus
+  * set up
 * open spectacle
 * open fuzzyclock
 * open system preferences
@@ -98,12 +103,18 @@
 
 * install work stuff if necessary
   * `mkdir -p ~/work`
-  * `brew cask install chefdk hipchat slack skype packer vagrant virtualbox postgres # etc...`
+  * `brew cask install slack skype packer vagrant virtualbox postgres docker chefdk hipchat # etc...`
+
+---
+
+* hide desktop icons
+  * `defaults write com.apple.finder CreateDesktop false && killall Finder`
+* drag unnecessary icons off dock
 
 ---
 
 * optional
-  * `brew cask install apple-events battle-net docker keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower steam tunnelblick`
+  * `brew cask install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick`
 * empty downloads directory
 * reboot
  
