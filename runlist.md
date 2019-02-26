@@ -49,7 +49,7 @@
 ---
 
 * install command line apps
-  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync jq`
+  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet`
 * set up environment
   * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
@@ -114,7 +114,8 @@
 ---
 
 * optional
-  * `brew cask install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick`
+  * `brew cask install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick transmit firefox`
+  * `brew install fortune cowsay chirp ffmpeg gifcicle sl youtube-dl`
 * empty downloads directory
 * reboot
  
