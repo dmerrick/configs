@@ -107,6 +107,9 @@
 * hide desktop icons
   * `defaults write com.apple.finder CreateDesktop false && killall Finder`
 * drag unnecessary icons off dock
+* `open ~/..`
+  * drag home dir into finder sidebar
+
 
 ---
 
