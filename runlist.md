@@ -19,6 +19,8 @@
     * set up resilio-sync
     * set up 1password
       * install browser extensions if necessary
+  * install iterm2
+    * `brew cask install iterm2`
 
 ---
 
@@ -28,25 +30,24 @@
      * enable screen sharing
      * enable remote login
   * iCloud
-     * turn on/off services as needed
+     * turn off photos sync
+     * turn off keychain sync
+     * turn off news
   * security
      * turn on screensaver password
      * enable location services
      * allow Apple Watch to unlock
-
----
-  
-* install iterm2
-   * `brew cask install iterm2`
-   * `ssh-keygen -t ecdsa -b 521`
-
+  * keyboard
+     * change capslock Modifier Key to ESC
 
 ---
 
 * install command line apps
   * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow`
 * set up environment
-  * add new [pubkey](https://github.com/settings/keys) to github
+  * generate new pubkey
+    * `ssh-keygen -t ecdsa -b 521`
+  * add new pubkey [to github](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
      * `stow bash ssh git ruby tmux vim`
