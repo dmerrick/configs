@@ -3,8 +3,7 @@
 * go through new user flow
   * log in to iCloud
     * do _not_ enable iCloud Keychain
-  * don't turn on filevault yet
-    * it takes a while and you can't run updates until it's done
+  * enable FileVault
 * check for/install updates
 
 ---
@@ -32,10 +31,8 @@
      * turn on/off services as needed
   * security
      * turn on screensaver password
-     * turn on filevault
      * enable location services
      * allow Apple Watch to unlock
-* reboot if filevault turned on
 
 ---
   
