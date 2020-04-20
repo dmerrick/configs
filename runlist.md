@@ -42,14 +42,12 @@
 * install iterm2
    * `brew cask install iterm2`
    * `ssh-keygen -t ecdsa -b 521`
-   * `mkdir -p ~/other_projects`
-   * `brew install bash`
-     * set default profile login command to `/usr/local/bin/bash`
+
 
 ---
 
 * install command line apps
-  * `brew install git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet`
+  * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow`
 * set up environment
   * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
@@ -62,7 +60,8 @@
      * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
      * open vim
        * run `:PluginInstall`
-  * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
+  * `mkdir -p ~/other_projects`
+     * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
   
   
 ---
