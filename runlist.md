@@ -52,7 +52,7 @@
   * add new [pubkey](https://github.com/settings/keys) to github
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
-     * `setup.sh`
+     * `stow bash git ruby tmux vim`
    * add new key to authorized_keys
      * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
      * `cd ~/configs && git commit authorized_keys`
