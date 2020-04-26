@@ -33,9 +33,6 @@ if [ $(uname) == 'Darwin' ]; then
   # custom ls colors
   export CLICOLOR=1
   export LSCOLORS=FxFxCxDxBxegedabagacfH # pretty much only for the last 2 chars
-
-  # enable iterm2 shell integration
-  [ -f ~/.iterm2_shell_integration.bash ] && source ~/.iterm2_shell_integration.bash
 fi
 
 # history crap
@@ -69,9 +66,6 @@ export GREP_COLOR='1;32'
 # sensitive or host-specific data goes in here
 [ -f ~/.bash_profile.private ] && source ~/.bash_profile.private
 
-#TODO: finish adding this
-# [ -f ~/.oh-my-bash.sh ] && source ~/.oh-my-bash.sh
-
 # load git-prompt if available, else use .bash_prompt
 if [ -f ~/other_projects/git-prompt/git-prompt.sh ]; then
   # mkdir -p ~/other_projects
@@ -83,6 +77,9 @@ else
   # fall back to very basic prompt
   PS1='$PWD > '
 fi
+
+# enable iterm2 shell integration
+[ -f ~/.iterm2_shell_integration.bash ] && source ~/.iterm2_shell_integration.bash
 
 # source bash completion
 [ -f /etc/bash_completion ] && source /etc/bash_completion
