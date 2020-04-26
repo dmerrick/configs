@@ -55344,7 +55344,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>mosh --server=/usr/local/bin/mosh-server home</string>
+			<string>mosh --server=/usr/local/bin/mosh-server mini</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -57288,7 +57288,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>mosh --server=/usr/local/bin/mosh-server home -- ssh 10.4.20.195</string>
+			<string>mosh --server=/usr/local/bin/mosh-server shadyglen -- ssh 10.4.20.195</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
@@ -58579,7 +58579,7 @@
 				<real>0.92180943489074707</real>
 			</dict>
 			<key>Bonjour Service Address</key>
-			<string>127.0.0.1</string>
+			<string>10.111.253.160</string>
 			<key>Bound Hosts</key>
 			<array/>
 			<key>Character Encoding</key>
@@ -58589,7 +58589,7 @@
 			<key>Columns</key>
 			<integer>80</integer>
 			<key>Command</key>
-			<string>ssh 127.0.0.1</string>
+			<string>ssh 10.111.253.160</string>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -58636,7 +58636,7 @@
 			<key>Default Bookmark</key>
 			<string>No</string>
 			<key>Description</key>
-			<string>Dana’s MacBook Pro</string>
+			<string>dmerrick-mini</string>
 			<key>Disable Window Resizing</key>
 			<true/>
 			<key>Flashing Bell</key>
@@ -58655,7 +58655,7 @@
 				<real>0.92180943489074707</real>
 			</dict>
 			<key>Guid</key>
-			<string>9E66BC63-5DD2-4B09-B325-2ED66F0A2E32</string>
+			<string>57C7072B-0B5D-4974-9497-68BDF177595B</string>
 			<key>Has Hotkey</key>
 			<false/>
 			<key>Horizontal Spacing</key>
@@ -58970,7 +58970,7 @@
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
-			<string>Dana’s MacBook Pro</string>
+			<string>dmerrick-mini</string>
 			<key>Non Ascii Font</key>
 			<string>Monaco 12</string>
 			<key>Non-ASCII Anti Aliased</key>
@@ -59309,7 +59309,7 @@
 				<real>0.92180943489074707</real>
 			</dict>
 			<key>Bonjour Service Address</key>
-			<string>10.111.253.160</string>
+			<string>127.0.0.1</string>
 			<key>Bound Hosts</key>
 			<array/>
 			<key>Character Encoding</key>
@@ -59319,7 +59319,7 @@
 			<key>Columns</key>
 			<integer>80</integer>
 			<key>Command</key>
-			<string>ssh 10.111.253.160</string>
+			<string>ssh 127.0.0.1</string>
 			<key>Cursor Color</key>
 			<dict>
 				<key>Alpha Component</key>
@@ -59366,7 +59366,7 @@
 			<key>Default Bookmark</key>
 			<string>No</string>
 			<key>Description</key>
-			<string>dmerrick-mini</string>
+			<string>Dana’s MacBook Pro</string>
 			<key>Disable Window Resizing</key>
 			<true/>
 			<key>Flashing Bell</key>
@@ -59385,7 +59385,7 @@
 				<real>0.92180943489074707</real>
 			</dict>
 			<key>Guid</key>
-			<string>0C39FB61-293D-4B70-9A64-A78986756B91</string>
+			<string>0204B98A-4EB1-446D-A815-9F3B1CC628AC</string>
 			<key>Has Hotkey</key>
 			<false/>
 			<key>Horizontal Spacing</key>
@@ -59700,7 +59700,7 @@
 			<key>Mouse Reporting</key>
 			<true/>
 			<key>Name</key>
-			<string>dmerrick-mini</string>
+			<string>Dana’s MacBook Pro</string>
 			<key>Non Ascii Font</key>
 			<string>Monaco 12</string>
 			<key>Non-ASCII Anti Aliased</key>
@@ -60115,7 +60115,7 @@
 				<real>0.92180943489074707</real>
 			</dict>
 			<key>Guid</key>
-			<string>0162066B-32AF-436E-9534-D5207D52CDBB</string>
+			<string>A50563B7-59A6-45DA-B26B-E9C75B048CD8</string>
 			<key>Has Hotkey</key>
 			<false/>
 			<key>Horizontal Spacing</key>
@@ -60523,7 +60523,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>63299200-34AE-41CE-8A47-8BA68C22B164</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>2</integer>
+	<integer>3</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -61300,7 +61300,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-04-20T14:00:31Z</date>
+	<date>2020-04-25T14:00:46Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SoundForEsc</key>
