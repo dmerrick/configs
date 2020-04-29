@@ -39,7 +39,7 @@ windows:
       panes:
         # update every 24 hours
         # to install: pip install gcalcli
-        - watch -t -c -n 86400 "/usr/local/anaconda3/envs/reverie_env/bin/gcalcli --calendar 'Reverie Labs General' --calendar 'Reverie Social Calendar' --calendar 'Gusto: Reverie Labs, Inc. reminders' --calendar 'dana@reverielabs.com' agenda"
+        - watch -t -c -n 86400 "/usr/local/anaconda3/envs/reverie_env/bin/gcalcli --calendar 'Reverie Labs General' --calendar 'Reverie Social Calendar' --calendar 'Gusto' --calendar 'dana@reverielabs.com' agenda"
         - tmux clock-mode -t 2
         - clear; neofetch
   # other examples:
