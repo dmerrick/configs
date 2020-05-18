@@ -27,7 +27,7 @@ windows:
       panes:
         - pane_with_multiple_commands:
           - clear
-          - cd ~/other_projects/danalol && bundle exec middleman server
+          - cd ~/danalol/website && bundle exec middleman server
           #- fortune | cowsay | lolcat
         - tmux clock-mode -t 2
         - tmux select-pane -t %4; clear; neofetch
