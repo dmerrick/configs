@@ -31,6 +31,8 @@ Plugin 'godlygeek/tabular'
 Plugin 'fatih/vim-go' " install with :GoInstallBinaries
 Plugin 'google/vim-jsonnet'
 Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'psf/black'
+Plugin 'hashivim/vim-terraform'
 call vundle#end()
 filetype plugin indent on " required by Vundle
 
@@ -152,6 +154,7 @@ set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusl
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
+" vim-go settings
 " these are syntax highlighting options for vim-go
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
@@ -159,12 +162,23 @@ let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
-
 " run the linters on autosave
 let g:go_metalinter_autosave = 1
 " I took out golint, add it back?
 let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
-
 " this could be useful with :GoBuild but are there more implications?
 "set autowrite
+
+" black settings
+" run black against python scripts on save
+autocmd BufWritePre *.py execute ':Black'
+" ignore differences in strings
+let g:black_skip_string_normalization=1
+
+" vim-terraform settings
+" auto-align settings
+let g:terraform_align=1
+" run terraform fmt on save
+let g:terraform_fmt_on_save=1
+
 
