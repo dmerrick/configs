@@ -6,6 +6,7 @@
 " then open vim and run :PluginInstall
 
 set nocompatible " be iMproved, required by Vundle
+
 filetype off     " required by Vundle
 
 " set the runtime path to include Vundle and initialize
@@ -41,6 +42,8 @@ let g:go_fmt_command = "goimports"
 
 " map spacebar as the leader key
 let mapleader = "\<Space>"
+
+setglobal pastetoggle=<F2>
 
 " use :help 'option' to see the documentation for the given option
 set ruler
