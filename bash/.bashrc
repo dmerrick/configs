@@ -63,7 +63,9 @@ export GREP_COLOR='1;32'
 # source aliases
 [ -f ~/.aliases ] && source ~/.aliases
 
-# sensitive or host-specific data goes in here
+# host-specific data goes in here
+[ -f ~/.bash_profile.local ] && source ~/.bash_profile.local
+# sensitive data goes in here
 [ -f ~/.bash_profile.private ] && source ~/.bash_profile.private
 
 # load git-prompt if available, else use .bash_prompt
