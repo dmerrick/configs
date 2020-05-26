@@ -17,26 +17,26 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'chriskempson/base16-vim'
+Plugin 'fatih/vim-go' " install with :GoInstallBinaries
+Plugin 'godlygeek/tabular'
+Plugin 'google/vim-jsonnet'
+Plugin 'hashivim/vim-terraform'
+Plugin 'psf/black'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdtree-git-plugin'
-"Plugin 'scrooloose/syntastic'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tpope/vim-commentary'
 Plugin 'terryma/vim-expand-region'
+Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-sleuth'
 Plugin 'tpope/vim-surround'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'godlygeek/tabular'
-Plugin 'fatih/vim-go' " install with :GoInstallBinaries
-Plugin 'google/vim-jsonnet'
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'psf/black'
-Plugin 'hashivim/vim-terraform'
+"Plugin 'scrooloose/syntastic'
 call vundle#end()
 filetype plugin indent on " required by Vundle
 
