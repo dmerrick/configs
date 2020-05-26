@@ -5,6 +5,9 @@
 " git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 " then open vim and run :PluginInstall
 
+" might be smart to crib more stuff from tpope's vimrc:
+" https://github.com/tpope/tpope/blob/master/.vimrc
+
 set nocompatible " be iMproved, required by Vundle
 
 filetype off     " required by Vundle
@@ -184,4 +187,21 @@ let g:terraform_align=1
 " run terraform fmt on save
 let g:terraform_fmt_on_save=1
 
+if exists('+undofile')
+  set undofile
+endif
 
+if v:version >= 700
+  " not 100% sure what this does
+  setglobal viminfo=!,'20,<50,s10,h
+endif
+if !empty($SUDO_USER) && $USER !=# $SUDO_USER
+  setglobal viminfo=
+  setglobal directory-=~/tmp
+  setglobal backupdir-=~/tmp
+elseif exists('+undofile')
+  setglobal undodir=~/.cache/vim/undo
+  if !isdirectory(&undodir)
+    call mkdir(&undodir, 'p')
+  endif
+endif
