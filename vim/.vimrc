@@ -35,6 +35,7 @@ Plugin 'tpope/vim-rsi'
 Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-sleuth'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-unimpaired'
 Plugin 'vim-ruby/vim-ruby'
 "Plugin 'scrooloose/syntastic'
 call vundle#end()
