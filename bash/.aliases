@@ -280,3 +280,4 @@ alias workspace="tmuxinator start workspace"
 
 # good idea:
 # cd ~/other projects && git cl ___
+# alias td='echo $(date +%Y-%m-%d)'
