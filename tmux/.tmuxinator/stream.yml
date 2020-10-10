@@ -7,7 +7,7 @@ root: ~/other_projects/danalol-stream
 # socket_name: stream
 
 # Runs before everything. Use it to start daemons etc.
-pre: export DISPLAY=:0
+pre: export DISPLAY=:0 && sudo ethtool -s enp3s0 wol g
 
 # Runs in each window and pane before window/pane specific commands.
 # pre_window: export ENV=prod
