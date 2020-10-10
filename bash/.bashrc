@@ -18,7 +18,7 @@ export PATH=$PATH:$HOME/bin:/sbin:/usr/sbin
 
 # if we have keychain then we rock
 if [ "$(which keychain 2>/dev/null)" ]; then
-  eval $(keychain --ignore-missing -q --eval ~/.ssh/id_rsa ~/.ssh/id_dsa ~/.ssh/id_ecdsa)
+  eval $(keychain --ignore-missing -q --eval --inherit ~/.ssh/id_rsa ~/.ssh/id_dsa ~/.ssh/id_ecdsa)
 fi
 
 # os x stuff here
