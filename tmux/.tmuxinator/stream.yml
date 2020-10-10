@@ -24,23 +24,23 @@ windows:
       pre: export IGNOREEOF=3
       panes:
         - clear; neofetch
-  - tripbot:
-      # ignore the first few CTRL-Ds (to prevent accidental closing)
-      pre: export IGNOREEOF=3
-      # two panes at the top, one big one at the bottom
-      layout: fa9d,191x90,0,0[191x15,0,0{95x15,0,0,0,95x15,96,0,2},191x74,0,16,3]
-      panes:
-        - sudo -k nice -n -15 su -c "ENV=prod DISABLE_MUSIC_AUTOPLAY=false /snap/bin/go run cmd/tripbot/tripbot.go >> log/bot.log 2>&1" $USER
-        - sudo -k nice -n -15 su -c "./bin/start-obs.sh" $USER
-        - pane_with_multiple_commands:
-          - clear
-          - tail -F log/bot.log
-  - media:
-      panes:
-        # try and start vlc-server
-        - sudo -k nice -n -15 su -c "ENV=prod /snap/bin/go run cmd/vlc-server/vlc-server.go || exit | tee -a log/vlc.log 2>&1" $USER
-        # try and start mopidy
-        - mopidy || exit
+  # - tripbot:
+  #     # ignore the first few CTRL-Ds (to prevent accidental closing)
+  #     pre: export IGNOREEOF=3
+  #     # two panes at the top, one big one at the bottom
+  #     layout: fa9d,191x90,0,0[191x15,0,0{95x15,0,0,0,95x15,96,0,2},191x74,0,16,3]
+  #     panes:
+  #       - sudo -k nice -n -15 su -c "ENV=prod DISABLE_MUSIC_AUTOPLAY=false /snap/bin/go run cmd/tripbot/tripbot.go >> log/bot.log 2>&1" $USER
+  #       - sudo -k nice -n -15 su -c "./bin/start-obs.sh" $USER
+  #       - pane_with_multiple_commands:
+  #         - clear
+  #         - tail -F log/bot.log
+  # - media:
+  #     panes:
+  #       # try and start vlc-server
+  #       - sudo -k nice -n -15 su -c "ENV=prod /snap/bin/go run cmd/vlc-server/vlc-server.go || exit | tee -a log/vlc.log 2>&1" $USER
+  #       # try and start mopidy
+  #       - mopidy || exit
   - irc:
       panes:
         - irssi
