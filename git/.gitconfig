@@ -64,3 +64,6 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+#TODO: investigate
+# git config pull.rebase true
+# git config rebase.autoStash true
