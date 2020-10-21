@@ -1,0 +1,8 @@
+* whitespace=!indent,trail,space
+*.sh whitespace=indent,trail,space eol=lf
+*.py eol=lf diff=python
+*.rb diff=ruby
+*.rake diff=ruby
+*.md    diff=markdown
+*.go    diff=golang
+

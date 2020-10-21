@@ -172,7 +172,7 @@ let g:go_highlight_extra_types = 1
 " run the linters on autosave
 let g:go_metalinter_autosave = 1
 " I took out golint, add it back?
-let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
+" let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
 " this could be useful with :GoBuild but are there more implications?
 "set autowrite
 
@@ -192,10 +192,10 @@ if exists('+undofile')
   set undofile
 endif
 
-if v:version >= 700
-  " not 100% sure what this does
-  setglobal viminfo=!,'20,<50,s10,h
-endif
+" if v:version >= 700
+"   " not 100% sure what this does
+"   setglobal viminfo=!,'20,<50,s10,h
+" endif
 if !empty($SUDO_USER) && $USER !=# $SUDO_USER
   setglobal viminfo=
   setglobal directory-=~/tmp

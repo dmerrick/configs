@@ -5,6 +5,7 @@
   ui = auto
 [core]
   excludesfile = ~/.gitignore.global
+	attributesfile = /Users/dmerrick/.gitattributes
 [push]
   default = simple
 [help]
