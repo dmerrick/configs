@@ -80,7 +80,7 @@
 ---
 
 * open iterm
-  * `brew cask install electric-sheep flux spectacle transmit vlc mac2imgur rescuetime fuzzyclock omnifocus`
+  * `brew cask install electric-sheep flux transmit vlc mac2imgur rescuetime fuzzyclock omnifocus`
 * open rescuetime
   * set up
 * open flux
@@ -95,6 +95,14 @@
   * set up electic sheep
   * disable system clock
   * add fuzzyclock to startup items
+
+---
+
+* `brew install mas`
+* sign in to App Store
+* `mas install 441258766  # Magnet`
+* `mas install 1191449274 # ToothFairy`
+* `mas install 937984704  # Amphetamine`
 
 ---
 
