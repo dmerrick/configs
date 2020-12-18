@@ -25,7 +25,7 @@ Plugin 'fatih/vim-go' " install with :GoInstallBinaries
 Plugin 'godlygeek/tabular'
 Plugin 'google/vim-jsonnet'
 Plugin 'hashivim/vim-terraform'
-Plugin 'psf/black'
+Plugin 'ambv/black'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdtree-git-plugin'
 Plugin 'terryma/vim-expand-region'
