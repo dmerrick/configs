@@ -53,7 +53,7 @@ then
     [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
     cd $DATA_DIR && \
     $RSYNC_CMD --exclude-from=.exclude_all_but_video $@ \
-    pancake:files/"TV\ Shows\ B" files/
+    seedbox:files/"TV\ Shows\ B" files/
   }
 
   sync_movies() {
@@ -89,7 +89,7 @@ then
   }
 
   sync_other() {
-  DATA_DIR="/Volumes/Leeroy"
+  DATA_DIR="/Volumes/Shadyglen"
     [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
     cd $DATA_DIR && \
     $RSYNC_CMD $@ \
