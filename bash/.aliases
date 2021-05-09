@@ -89,7 +89,7 @@ then
   }
 
   sync_other() {
-  DATA_DIR="/Volumes/Leeroy"
+  DATA_DIR="/Volumes/Shadyglen"
     [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
     cd $DATA_DIR && \
     $RSYNC_CMD $@ \
