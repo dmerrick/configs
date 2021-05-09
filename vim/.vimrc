@@ -206,3 +206,10 @@ elseif exists('+undofile')
     call mkdir(&undodir, 'p')
   endif
 endif
+
+" disable arrow keys
+" https://vi.stackexchange.com/a/5854
+" noremap <Up> <Nop>
+" noremap <Down> <Nop>
+" noremap <Left> <Nop>
+" noremap <Right> <Nop>
