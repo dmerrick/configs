@@ -192,6 +192,9 @@ if exists('+undofile')
   set undofile
 endif
 
+" enable syntax in markdown ``` blocks
+let g:markdown_fenced_languages = ['bash', 'python', 'ruby']
+
 " if v:version >= 700
 "   " not 100% sure what this does
 "   setglobal viminfo=!,'20,<50,s10,h
