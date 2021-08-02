@@ -1,0 +1,129 @@
+### Dana's Workstation Runlist
+
+* go through new user flow
+  * log in to iCloud
+    * do _not_ enable iCloud Keychain
+  * enable FileVault
+* check for/install updates
+
+---
+
+* open terminal
+  * run homebrew install script
+    * `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+  * install chrome
+    * `brew cask install google-chrome`
+    * sign in with google account
+  * install resilio-sync & 1password
+    * `brew cask install resilio-sync 1password`
+    * set up resilio-sync
+    * set up 1password
+      * install browser extensions if necessary
+  * install iterm2
+    * `brew cask install iterm2`
+
+---
+
+* open system preferences
+  * sharing
+     * set hostname
+     * enable screen sharing
+     * enable remote login
+  * iCloud
+     * turn off photos sync
+     * turn off keychain sync
+     * turn off news
+  * security
+     * turn on screensaver password
+     * enable location services
+     * allow Apple Watch to unlock
+  * keyboard
+     * change capslock Modifier Key to ESC
+
+---
+
+* install command line apps
+  * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow`
+* set up environment
+  * generate new pubkey
+    * `ssh-keygen -t ecdsa -b 521`
+  * add new pubkey [to github](https://github.com/settings/keys)
+  * clone [configs repo](https://github.com/dmerrick/configs)
+     * `rm ~/.bashrc ~/.bash_profile`
+     * `stow bash ssh git ruby tmux vim`
+   * add new key to authorized_keys
+     * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
+     * `cd ~/configs && git commit authorized_keys`
+  * set up vim
+     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
+     * open vim
+       * run `:PluginInstall`
+  * `mkdir -p ~/other_projects`
+     * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
+  
+  
+---
+
+* set up workspace
+  * install rvm
+    * `command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -`
+    * `curl -sSL https://get.rvm.io | bash -s stable`
+  * `rvm install 2.6 # or whatever is latest`
+  * `rvm --default use 2.6`
+  * `rvm @global do gem install tmuxinator lolcat`
+  * `brew install reattach-to-user-namespace watch neofetch`
+  * open iterm
+    * go to preferences
+    * enable "Load preferences from folder" and "save changes to folder on exit"
+    * send text at start: `tmuxinator s workspace`
+
+---
+
+* open iterm
+  * `brew cask install electric-sheep flux transmit vlc mac2imgur rescuetime fuzzyclock omnifocus`
+* open rescuetime
+  * set up
+* open flux
+  * set up
+* open mac2imgur
+  * set up
+* open omnifocus
+  * set up
+* open spectacle
+* open fuzzyclock
+* open system preferences
+  * set up electic sheep
+  * disable system clock
+  * add fuzzyclock to startup items
+
+---
+
+* `brew install mas`
+* sign in to App Store
+* `mas install 441258766  # Magnet`
+* `mas install 1191449274 # ToothFairy`
+* `mas install 937984704  # Amphetamine`
+
+---
+
+* install work stuff if necessary
+  * `mkdir -p ~/work`
+  * `brew cask install slack skype packer vagrant virtualbox postgres docker chefdk hipchat # etc...`
+
+---
+
+* hide desktop icons
+  * `defaults write com.apple.finder CreateDesktop false && killall Finder`
+* drag unnecessary icons off dock
+* `open ~/..`
+  * drag home dir into finder sidebar
+
+
+---
+
+* optional
+  * `brew cask install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick transmit firefox`
+  * `brew install fortune cowsay chirp ffmpeg gifcicle sl youtube-dl`
+* empty downloads directory
+* reboot
+ 
