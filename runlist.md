@@ -10,17 +10,17 @@
 
 * open terminal
   * run homebrew install script
-    * `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+    * `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
   * install chrome
-    * `brew cask install google-chrome`
+    * `brew install google-chrome`
     * sign in with google account
   * install resilio-sync & 1password
-    * `brew cask install resilio-sync 1password`
+    * `brew install resilio-sync 1password`
     * set up resilio-sync
     * set up 1password
       * install browser extensions if necessary
   * install iterm2
-    * `brew cask install iterm2`
+    * `brew install iterm2`
 
 ---
 
@@ -39,11 +39,13 @@
      * allow Apple Watch to unlock
   * keyboard
      * change capslock Modifier Key to ESC
+     * disable spelling correction
+     * disable capitalize words
 
 ---
 
 * install command line apps
-  * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow`
+  * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow bat lsd`
 * set up environment
   * generate new pubkey
     * `ssh-keygen -t ecdsa -b 521`
@@ -68,8 +70,8 @@
   * install rvm
     * `command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -`
     * `curl -sSL https://get.rvm.io | bash -s stable`
-  * `rvm install 2.6 # or whatever is latest`
-  * `rvm --default use 2.6`
+  * `rvm install 3.0 # or whatever is latest`
+  * `rvm --default use 3.0`
   * `rvm @global do gem install tmuxinator lolcat`
   * `brew install reattach-to-user-namespace watch neofetch`
   * open iterm
@@ -80,7 +82,7 @@
 ---
 
 * open iterm
-  * `brew cask install electric-sheep flux transmit vlc mac2imgur rescuetime fuzzyclock omnifocus`
+  * `brew install electric-sheep flux transmit vlc mac2imgur rescuetime fuzzyclock omnifocus fantastical`
 * open rescuetime
   * set up
 * open flux
@@ -89,7 +91,6 @@
   * set up
 * open omnifocus
   * set up
-* open spectacle
 * open fuzzyclock
 * open system preferences
   * set up electic sheep
@@ -103,12 +104,14 @@
 * `mas install 441258766  # Magnet`
 * `mas install 1191449274 # ToothFairy`
 * `mas install 937984704  # Amphetamine`
+* `mas install 957162288  # CoinBar`
+* `mas install 290986013  # Deliveries`
 
 ---
 
 * install work stuff if necessary
   * `mkdir -p ~/work`
-  * `brew cask install slack skype packer vagrant virtualbox postgres docker chefdk hipchat # etc...`
+  * `brew install slack packer postgres docker # etc...`
 
 ---
 
@@ -117,13 +120,16 @@
 * drag unnecessary icons off dock
 * `open ~/..`
   * drag home dir into finder sidebar
+* open Messages
+  * enable messages in iCloud
+  * open iPhone settings and enable SMS forwarding
 
 
 ---
 
 * optional
-  * `brew cask install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick transmit firefox`
-  * `brew install fortune cowsay chirp ffmpeg gifcicle sl youtube-dl`
+  * `brew install apple-events battle-net keycastr mactex messenger spotify steam transmission plex-media-player calibre discord keybase obs soundflower tunnelblick transmit firefox chatterino signal`
+  * `brew install fortune cowsay chirp ffmpeg gifcicle sl youtube-dl cmatrix`
 * empty downloads directory
 * reboot
  
