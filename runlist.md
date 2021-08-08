@@ -106,6 +106,7 @@
 * `mas install 937984704  # Amphetamine`
 * `mas install 957162288  # CoinBar`
 * `mas install 290986013  # Deliveries`
+* `mas install 1295203466 # Microsoft Remote Desktop`
 
 ---
 
