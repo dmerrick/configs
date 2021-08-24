@@ -124,6 +124,7 @@
 * open Messages
   * enable messages in iCloud
   * open iPhone settings and enable SMS forwarding
+* make chrome the default [`mailto://` handler](https://support.google.com/a/users/answer/9308783?hl=en)
 
 
 ---
