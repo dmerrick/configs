@@ -125,7 +125,9 @@
   * enable messages in iCloud
   * open iPhone settings and enable SMS forwarding
 * make chrome the default [`mailto://` handler](https://support.google.com/a/users/answer/9308783?hl=en)
-
+* increase key repeat speed:
+  * `defaults write -g InitialKeyRepeat -int 10`
+  * `defaults write -g KeyRepeat -int 1`
 
 ---
 
@@ -134,4 +136,3 @@
   * `brew install fortune cowsay chirp ffmpeg gifcicle sl youtube-dl cmatrix`
 * empty downloads directory
 * reboot
- 
