@@ -25,7 +25,7 @@ Plugin 'fatih/vim-go' " install with :GoInstallBinaries
 Plugin 'godlygeek/tabular'
 Plugin 'google/vim-jsonnet'
 Plugin 'hashivim/vim-terraform'
-Plugin 'psf/black'
+Plugin 'ambv/black'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdtree-git-plugin'
 Plugin 'terryma/vim-expand-region'
@@ -172,7 +172,7 @@ let g:go_highlight_extra_types = 1
 " run the linters on autosave
 let g:go_metalinter_autosave = 1
 " I took out golint, add it back?
-let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
+" let g:go_metalinter_autosave_enabled = ['vet', 'errcheck']
 " this could be useful with :GoBuild but are there more implications?
 "set autowrite
 
@@ -192,10 +192,13 @@ if exists('+undofile')
   set undofile
 endif
 
-if v:version >= 700
-  " not 100% sure what this does
-  setglobal viminfo=!,'20,<50,s10,h
-endif
+" enable syntax in markdown ``` blocks
+let g:markdown_fenced_languages = ['bash', 'python', 'ruby']
+
+" if v:version >= 700
+"   " not 100% sure what this does
+"   setglobal viminfo=!,'20,<50,s10,h
+" endif
 if !empty($SUDO_USER) && $USER !=# $SUDO_USER
   setglobal viminfo=
   setglobal directory-=~/tmp
@@ -206,3 +209,10 @@ elseif exists('+undofile')
     call mkdir(&undodir, 'p')
   endif
 endif
+
+" disable arrow keys
+" https://vi.stackexchange.com/a/5854
+" noremap <Up> <Nop>
+" noremap <Down> <Nop>
+" noremap <Left> <Nop>
+" noremap <Right> <Nop>

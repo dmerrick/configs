@@ -12,7 +12,7 @@ For a complete guide on setting up a Mac, see [Dana's Workstation Runlist](https
 * `cd ~/configs`
 * Make sure we have [GNU Stow](https://www.gnu.org/software/stow/)
   * `brew install stow  # or apt or whatever`
-* `stow bash git ruby tmux vim ssh other`
+* `stow bash zsh git ruby tmux vim ssh other`
 
 
 ## Migrating from setup.sh to GNU Stow
