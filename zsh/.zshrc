@@ -13,6 +13,10 @@ PROMPT='%(?.%F{green}√.%F{red}?%?)%f ${vcs_info_msg_0_} %B%F{240}%1~%f%b %# '
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
+# add homebrew path
+#TODO: only on darwin
+export PATH="/opt/homebrew/bin:$PATH"
+
 # makes git 66% smaller
 # (and shows git status if no args)
 g() {
