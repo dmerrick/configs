@@ -68,3 +68,4 @@
 #TODO: investigate
 # git config pull.rebase true
 # git config rebase.autoStash true
+# merge.conflictStyle = diff3
