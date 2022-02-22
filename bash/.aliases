@@ -26,8 +26,8 @@ g() {
 #function ssh () { autossh -t $@ "tmux -CC -A" }
 
 # os x only
-if [ `uname` == 'Darwin' ];
-then
+# if [ `uname` == 'Darwin' ];
+# then
   # alias ls='ls -G'
   alias ls='lsd'
 
@@ -118,12 +118,12 @@ then
     sync_audiobooks -n --no-verbose
   }
 
-else
-  alias ls='ls --color=always'
+# else
+#   alias ls='ls --color=always'
 
-  alias pbcopy='xsel --clipboard --input'
-  alias pbpaste='xsel --clipboard --output'
-fi
+#   alias pbcopy='xsel --clipboard --input'
+#   alias pbpaste='xsel --clipboard --output'
+# fi
 
 # ruby users get it
 alias b='bundle exec'
