@@ -57848,7 +57848,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>keychain --ignore-missing -q --eval ~/.ssh/id_rsa ~/.ssh/id_dsa ~/.ssh/id_ecdsa &amp;&amp; ~/bin/tmux.sh workspace</string>
+			<string>ssh-add -K &amp;&amp; ~/bin/tmux.sh workspace</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
