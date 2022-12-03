@@ -8,6 +8,7 @@
 	attributesfile = /Users/dmerrick/.gitattributes
 [push]
   default = simple
+  autoSetupRemote = true
 [help]
   autocorrect = 20
 [http]
