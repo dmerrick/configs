@@ -102,11 +102,12 @@
 
 * `brew install mas`
 * sign in to App Store
-* `mas install 441258766  # Magnet`
+* `mas install  290986013 # Deliveries`
+* `mas install  441258766 # Magnet`
+* `mas install  937984704 # Amphetamine`
+* `mas install  957162288 # CoinBar`
+* `mas install  993487541 # CARROT Weather`
 * `mas install 1191449274 # ToothFairy`
-* `mas install 937984704  # Amphetamine`
-* `mas install 957162288  # CoinBar`
-* `mas install 290986013  # Deliveries`
 * `mas install 1295203466 # Microsoft Remote Desktop`
 * `mas install 1358823008 # Flighty`
 
