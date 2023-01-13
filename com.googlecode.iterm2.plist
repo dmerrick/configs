@@ -59833,7 +59833,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>mosh --server=/usr/local/bin/mosh-server hawthorne</string>
+			<string>mosh --server=/usr/local/bin/mosh-server home</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
