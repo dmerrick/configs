@@ -147,7 +147,16 @@ alias tf-dana-core="cd ~/adanalife/infra/terraform/core && aws-dana-core"
 alias tf-dana-stage="cd ~/adanalife/infra/terraform/stage-1 && aws-dana-stage"
 alias tf-dana-prod="cd ~/adanalife/infra/terraform/prod-1 && aws-dana-prod"
 
-alias devenv="source activate reverie_env && aws-legacy -- ~/work/infra/bin/rit-devenv"
+#alias devenv="source activate reverie_env && aws-legacy -- ~/work/infra/bin/rit-devenv"
+alias devenv="ssh -t devenv-prod-cpu -- tmux new -A -s workspace"
+alias devenv-up="aws-prod-west-2 -- aws ec2 start-instances --instance-ids i-0c15b75d6834e2a89 | jq -r '.StartingInstances[0].CurrentState.Name'"
+alias devenv-down="aws-prod-west-2 -- aws ec2 stop-instances --instance-ids i-0c15b75d6834e2a89 | jq -r '.StoppingInstances[0].CurrentState.Name'"
+# alias devenv-down="ssh devenv-prod-cpu -- 'sudo shutdown -t now'"
+
+alias devenv-stage="ssh -t devenv-stage-cpu -- tmux new -A -s workspace"
+alias devenv-stage-up="aws-stage -- aws ec2 start-instances --instance-ids i-0423247d8aa1d3b28 | jq -r '.StartingInstances[0].CurrentState.Name'"
+alias devenv-stage-down="aws-stage -- aws ec2 stop-instances --instance-ids i-0423247d8aa1d3b28 | jq -r '.StoppingInstances[0].CurrentState.Name'"
+# alias devenv-stage-down="ssh devenv-stage-cpu -- 'sudo shutdown -t now'"
 
 alias plex-restart='ssh hawthorne -- open -a "/Applications/Plex\ Media\ Server.app"'
 
