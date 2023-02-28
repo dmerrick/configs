@@ -165,19 +165,3 @@ alias retry='while [ $? -ne 0 ]; do fc -e "#"; done'
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 source ~/.zshrc.conda
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/dmerrick/miniconda/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/dmerrick/miniconda/etc/profile.d/conda.sh" ]; then
-        . "/Users/dmerrick/miniconda/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/dmerrick/miniconda/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
