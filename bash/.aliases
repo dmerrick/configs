@@ -34,7 +34,7 @@ g() {
   # tried-and-true rsync options
   RSYNC_CMD="$(brew --prefix)/bin/rsync -v -madPhi --no-p --no-t --append-verify"
   #RSYNC_CMD="$(which rsync) -v -madPhi --no-p --no-t --append-verify"
-  DATA_DIR="/Volumes/Leeroy"
+  DATA_DIR="/Volumes/Shadyglen"
   NODATAMSG="External drive not found. Stopping."
 
   # instead of exludes files, we could use something like this:
@@ -47,6 +47,7 @@ g() {
     cd $DATA_DIR && \
     $RSYNC_CMD --exclude-from=.exclude_all_but_video $@ \
     "seedbox:files/TV Shows" files/
+    # seedbox:files/"TV\ Shows" files/
   }
   sync_tv_b() {
      DATA_DIR="/Volumes/Shadyglen"
@@ -97,7 +98,7 @@ g() {
   }
 
   sync_youtube() {
-  DATA_DIR="/Volumes/Leeroy"
+  DATA_DIR="/Volumes/Shadyglen"
     [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
     cd $DATA_DIR/YouTube && \
     ./download.sh
