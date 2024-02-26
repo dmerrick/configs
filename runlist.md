@@ -83,7 +83,7 @@
 ---
 
 * open iterm
-  * `brew install  transmit vlc  rescuetime fuzzyclock omnifocus obsidian fantastical`
+  * `brew install bartender transmit vlc rescuetime fuzzyclock omnifocus obsidian fantastical`
 * open rescuetime
   * set up
 * open omnifocus
