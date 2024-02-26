@@ -46,7 +46,7 @@
 ---
 
 * install command line apps
-  * `brew install bash git wget gpg tmux mobile-shell coreutils vim rsync jq ack htop keychain rename telnet stow bat lsd`
+  * `brew install zsh git wget gpg tmux mobile-shell coreutils nvim rsync jq ripgrep htop keychain rename telnet stow bat lsd`
 * set up environment
   * generate new pubkey
     * `ssh-keygen -t ecdsa -b 521`
@@ -83,12 +83,8 @@
 ---
 
 * open iterm
-  * `brew install electric-sheep flux transmit vlc mac2imgur rescuetime fuzzyclock omnifocus fantastical`
+  * `brew install  transmit vlc  rescuetime fuzzyclock omnifocus obsidian fantastical`
 * open rescuetime
-  * set up
-* open flux
-  * set up
-* open mac2imgur
   * set up
 * open omnifocus
   * set up
