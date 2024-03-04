@@ -46,14 +46,14 @@
 ---
 
 * install command line apps
-  * `brew install zsh git wget gpg tmux mobile-shell coreutils nvim rsync jq ripgrep htop keychain rename telnet stow bat lsd`
+  * `brew install zsh git wget gpg tmux mosh coreutils nvim rsync jq ripgrep htop rename telnet stow bat lsd`
 * set up environment
   * generate new pubkey
     * `ssh-keygen -t ecdsa -b 521`
   * add new pubkey [to github](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
      * `rm ~/.bashrc ~/.bash_profile`
-     * `stow bash ssh git ruby tmux vim`
+     * `stow zsh bash git ruby tmux vim`
    * add new key to authorized_keys
      * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
      * `cd ~/configs && git commit authorized_keys`
@@ -68,17 +68,10 @@
 ---
 
 * set up workspace
-  * install rvm
-    * `command curl -sSL https://rvm.io/pkuczynski.asc | gpg --import -`
-    * `curl -sSL https://get.rvm.io | bash -s stable`
-  * `rvm install 3.0 # or whatever is latest`
-  * `rvm --default use 3.0`
-  * `rvm @global do gem install tmuxinator lolcat`
   * `brew install reattach-to-user-namespace watch neofetch`
   * open iterm
     * go to preferences
     * enable "Load preferences from folder" and "save changes to folder on exit"
-    * send text at start: `tmuxinator s workspace`
 
 ---
 
@@ -98,10 +91,9 @@
 
 * `brew install mas`
 * sign in to App Store
-* `mas install  290986013 # Deliveries`
+* `mas install  639968404 # Parcel`
 * `mas install  441258766 # Magnet`
 * `mas install  937984704 # Amphetamine`
-* `mas install  957162288 # CoinBar`
 * `mas install  993487541 # CARROT Weather`
 * `mas install 1191449274 # ToothFairy`
 * `mas install 1295203466 # Microsoft Remote Desktop`
