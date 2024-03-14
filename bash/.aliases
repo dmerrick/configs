@@ -65,6 +65,7 @@ g() {
     seedbox:files/Movies files/
   }
 
+  #TODO: sync Other/FLACs dir too
   sync_music() {
   DATA_DIR="/Volumes/Shadyglen"
     [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
@@ -142,6 +143,10 @@ alias confsync="cd ~/configs && ./setup.sh update && ./setup.sh"
 if we_have vim
   then alias vi="vim"
   else alias vim="vi"
+fi
+if we_have nvim
+  then alias vi="nvim"
+  alias vim="nvim"
 fi
 alias svim="sudo vim"
 alias ":e"="vim"
