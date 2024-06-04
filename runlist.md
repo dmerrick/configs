@@ -57,10 +57,43 @@
    * add new key to authorized_keys
      * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
      * `cd ~/configs && git commit authorized_keys`
-  * set up vim
-     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
-     * open vim
-       * run `:PluginInstall`
+  * set up astrovim
+     * `git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim`
+     * open `nvim`
+       * `:LspInstall pyright`
+       * `:LspInstall black`
+       * `:TSInstall python`
+actionlint
+autoflake
+autopep8
+bash-language-server
+checkmake
+dockerfile-language-server
+gitleaks
+gofumpt
+goimports
+gopls
+hadolint
+helm-ls
+isort
+jq
+json-lsp
+jsonlint
+jsonnet-language-server
+jsonnet-fmt
+markdownlint
+prettier
+python-lsp-server
+rubocop
+ruby-lsp
+shellcheck
+sqlfmt
+terraform-ls
+tflint
+yaml-language-server
+yamllint
+yq
+
   * `mkdir -p ~/other_projects`
      * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
   
