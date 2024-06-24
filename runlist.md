@@ -15,8 +15,7 @@
     * `brew install google-chrome`
     * sign in with google account
   * install resilio-sync & 1password
-    * `brew tap homebrew/cask-versions`
-    * `brew install resilio-sync 1password7`
+    * `brew install resilio-sync 1password@7`
     * set up resilio-sync
     * set up 1password
       * install browser extensions if necessary
@@ -25,7 +24,7 @@
 
 ---
 
-* open system preferences
+* open system settings
   * sharing
      * set hostname
      * enable screen sharing
