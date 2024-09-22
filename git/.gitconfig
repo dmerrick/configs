@@ -1,6 +1,6 @@
 [user]
   name = Dana Merrick
-  email = dana.merrick@gmail.com
+	email = dmerrick@ginkgobioworks.com
 [color]
   ui = auto
 [core]
@@ -70,3 +70,5 @@
 # git config pull.rebase true
 # git config rebase.autoStash true
 # merge.conflictStyle = diff3
+[init]
+	defaultBranch = main
