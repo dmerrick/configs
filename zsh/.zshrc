@@ -87,5 +87,18 @@ alias plex-restart='ssh home -- open -a "/Applications/Plex\ Media\ Server.app"'
 
 alias retry='while [ $? -ne 0 ]; do fc -e "#"; done'
 
+if type brew &>/dev/null; then
+  # brew install zsh-completions
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+
+  # brew install zsh-autosuggestions
+  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  # brew install zsh-syntax-highlighting
+  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
 # add atuin (fancy shell history)
 eval "$(atuin init zsh --disable-up-arrow)"
