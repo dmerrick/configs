@@ -165,3 +165,5 @@ alias retry='while [ $? -ne 0 ]; do fc -e "#"; done'
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 source ~/.zshrc.conda
+
+eval "$(atuin init zsh --disable-up-arrow)"
