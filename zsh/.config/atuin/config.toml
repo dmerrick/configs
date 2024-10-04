@@ -13,15 +13,6 @@
 ## windows: %USERPROFILE%/.local/share/atuin/session
 # session_path = "~/.session"
 
-## date format used, either "us" or "uk"
-# dialect = "us"
-
-## default timezone to use when displaying time
-## either "l", "local" to use the system's current local timezone, or an offset
-## from UTC in the format of "<+|->H[H][:M[M][:S[S]]]"
-## for example: "+9", "-05", "+03:30", "-01:23:45", etc.
-# timezone = "local"
-
 ## enable or disable automatic sync
 # auto_sync = true
 
@@ -30,6 +21,9 @@
 
 ## address of the sync server
 # sync_address = "https://api.atuin.sh"
+#sync_address = "https://atuin.merrick.us"
+sync_address = "http://192.168.1.2:8888"
+#sync_address = "https://sasanoa.synology.me:5443"
 
 ## how often to sync history. note that this is only triggered when a command
 ## is ran, so sync intervals may well be longer
@@ -65,9 +59,6 @@
 ## the maximum number of lines the interface should take up
 ## set it to 0 to always go full screen
 # inline_height = 0
-
-## Invert the UI - put the search bar at the top , Default to `false`
-# invert = false
 
 ## enable or disable showing a preview of the selected command
 ## useful when the command is longer than the terminal width and is cut off
@@ -135,7 +126,7 @@
 
 ## Defaults to true. If enabled, upon hitting enter Atuin will immediately execute the command. Press tab to return to the shell and edit.
 # This applies for new installs. Old installs will keep the old behaviour unless configured otherwise.
-enter_accept = true
+enter_accept = false
 
 ## Defaults to "emacs".  This specifies the keymap on the startup of `atuin
 ## search`.  If this is set to "auto", the startup keymap mode in the Atuin
