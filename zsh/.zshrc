@@ -1,3 +1,5 @@
+autoload -U compinit; compinit
+
 # Load version control information
 autoload -Uz vcs_info
 precmd() { vcs_info }
@@ -8,18 +10,12 @@ zstyle ':vcs_info:git:*' formats '(%b)'
 # Set up the prompt (with git branch name)
 setopt PROMPT_SUBST
 PROMPT='%(?.%F{green}√.%F{red}?%?)%f ${vcs_info_msg_0_} %B%F{240}%1~%f%b %# '
-# PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} > '
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
-# add homebrew path
-#TODO: only on darwin
-export PATH="/opt/homebrew/bin:$PATH"
 
 export PATH="$PATH:$HOME/bin"
 
-source ~/.aliases
+if [ -f ~/.aliases ]; then
+  source ~/.aliases
+fi
 
 # makes git 66% smaller
 # (and shows git status if no args)
@@ -30,11 +26,10 @@ g() {
    git "$@"
  fi
 }
+compdef g=git
 
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
-
-# cread tis: https://github.com/zsh-users/zsh-completions/blob/master/zsh-completions-howto.org
 
 # ignore case when globbing/tab-completing
 setopt NO_CASE_GLOB
@@ -59,8 +54,6 @@ setopt HIST_IGNORE_DUPS
 setopt HIST_FIND_NO_DUPS
 # removes blank lines from history
 setopt HIST_REDUCE_BLANKS
-
-# compdef g=git
 
 #TODO: make these match bash?
 SAVEHIST=500000
@@ -87,7 +80,22 @@ alias plex-restart='ssh home -- open -a "/Applications/Plex\ Media\ Server.app"'
 
 alias retry='while [ $? -ne 0 ]; do fc -e "#"; done'
 
+if type nvim &>/dev/null; then
+  export EDITOR=nvim
+fi
+
 if type brew &>/dev/null; then
+  # add homebrew path
+  export PATH="/opt/homebrew/bin:$PATH"
+
+  # add k8s context to prompt
+  source $(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh
+  KUBE_PS1_NS_ENABLE=false
+  KUBE_PS1_SYMBOL_ENABLE=false
+  KUBE_PS1_SUFFIX=') '
+  PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
+
+
   # brew install zsh-completions
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
@@ -100,5 +108,11 @@ if type brew &>/dev/null; then
   source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
-# add atuin (fancy shell history)
-eval "$(atuin init zsh --disable-up-arrow)"
+if type atuin &>/dev/null; then
+  # add atuin (fancy shell history)
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/tk tk
+
