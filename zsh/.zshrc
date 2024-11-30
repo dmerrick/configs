@@ -10,6 +10,16 @@ zstyle ':vcs_info:git:*' formats '(%b)'
 # Set up the prompt (with git branch name)
 setopt PROMPT_SUBST
 PROMPT='%(?.%F{green}√.%F{red}?%?)%f ${vcs_info_msg_0_} %B%F{240}%1~%f%b %# '
+# PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} > '
+source "/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh"
+PS1='$(kube_ps1)'$PS1
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# add homebrew path
+#TODO: only on darwin
+export PATH="/opt/homebrew/bin:$PATH"
 
 export PATH="$PATH:$HOME/bin"
 
