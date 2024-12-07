@@ -6,6 +6,9 @@
 [core]
   excludesfile = ~/.gitignore.global
 	attributesfile = /Users/dmerrick/.gitattributes
+	pager = delta
+[blame]
+	pager = delta
 [push]
   default = simple
   autoSetupRemote = true
@@ -69,6 +72,23 @@
 #TODO: investigate
 # git config pull.rebase true
 # git config rebase.autoStash true
-# merge.conflictStyle = diff3
+[diff]
+  colorMoved = default
 [init]
 	defaultBranch = main
+[credential]
+	helper = 
+	helper = /usr/local/share/gcm-core/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true
+[interactive]
+	diffFilter = delta --color-only
+[merge]
+	conflictStyle = zdiff3
+[delta]
+	navigate = true
+	theme = dracula
+	line-numbers = true
+	hyperlinks = true
+	; hyperlinks-commit-link-format = "https://invent.kde.org/utilities/konsole/-/commit/{commit}"
+	; side-by-side = true
