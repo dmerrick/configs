@@ -15,8 +15,7 @@
     * `brew install google-chrome`
     * sign in with google account
   * install resilio-sync & 1password
-    * `brew tap homebrew/cask-versions`
-    * `brew install resilio-sync 1password7`
+    * `brew install resilio-sync 1password@7`
     * set up resilio-sync
     * set up 1password
       * install browser extensions if necessary
@@ -25,7 +24,7 @@
 
 ---
 
-* open system preferences
+* open system settings
   * sharing
      * set hostname
      * enable screen sharing
@@ -52,15 +51,47 @@
     * `ssh-keygen -t ecdsa -b 521`
   * add new pubkey [to github](https://github.com/settings/keys)
   * clone [configs repo](https://github.com/dmerrick/configs)
-     * `rm ~/.bashrc ~/.bash_profile`
-     * `stow zsh bash git ruby tmux vim`
+     * `stow zsh git ruby tmux vim`
    * add new key to authorized_keys
      * `cat ~/.ssh/id_ecdsa.pub >> ~/.ssh/authorized_keys`
      * `cd ~/configs && git commit authorized_keys`
-  * set up vim
-     * `git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim`
-     * open vim
-       * run `:PluginInstall`
+  * set up astrovim
+     * `git clone --depth 1 https://github.com/AstroNvim/AstroNvim ~/.config/nvim`
+     * open `nvim`
+       * `:LspInstall pyright`
+       * `:LspInstall black`
+       * `:TSInstall python`
+actionlint
+autoflake
+autopep8
+bash-language-server
+checkmake
+dockerfile-language-server
+gitleaks
+gofumpt
+goimports
+gopls
+hadolint
+helm-ls
+isort
+jq
+json-lsp
+jsonlint
+jsonnet-language-server
+jsonnet-fmt
+markdownlint
+prettier
+python-lsp-server
+rubocop
+ruby-lsp
+shellcheck
+sqlfmt
+terraform-ls
+tflint
+yaml-language-server
+yamllint
+yq
+
   * `mkdir -p ~/other_projects`
      * clone [git-prompt repo](https://github.com/dmerrick/git-prompt)
   
