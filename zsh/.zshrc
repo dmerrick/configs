@@ -12,15 +12,9 @@ zstyle ':vcs_info:git:*' formats '(%b)'
 setopt PROMPT_SUBST
 PROMPT='%(?.%F{green}√.%F{red}?%?)%f ${vcs_info_msg_0_} %B%F{240}%1~%f%b %# '
 # PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} > '
-source "/opt/homebrew/opt/kube-ps1/share/kube-ps1.sh"
-PS1='$(kube_ps1)'$PS1
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
-
-# add homebrew path
-#TODO: only on darwin
-export PATH="/opt/homebrew/bin:$PATH"
 
 # Add custom bin directory to PATH
 export PATH="$PATH:$HOME/bin"
@@ -87,25 +81,31 @@ fi
 # Homebrew setup
 if type brew &>/dev/null; then
   # Add homebrew path
-  export PATH="/opt/homebrew/bin:$PATH"
+  export PATH="$(brew --prefix)/bin:$PATH"
 
   # Add k8s context to prompt
-  source $(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh
-  KUBE_PS1_NS_ENABLE=false
-  KUBE_PS1_SYMBOL_ENABLE=false
-  KUBE_PS1_SUFFIX=') '
-  PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
+  if type kube-ps1 &>/dev/null; then
+    source $(brew --prefix)/opt/kube-ps1/share/kube-ps1.sh
+    PS1='$(kube_ps1)'$PS1
+    KUBE_PS1_NS_ENABLE=false
+    KUBE_PS1_SYMBOL_ENABLE=false
+    KUBE_PS1_SUFFIX=') '
+    PROMPT='$(kube_ps1)'$PROMPT # or RPROMPT='$(kube_ps1)'
+  fi
+
 
   # Load zsh completions
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  autoload -Uz compinit
-  compinit
+  #FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  #autoload -Uz compinit
+  #compinit
 
   # Load zsh-autosuggestions
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  #source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
   # Load zsh-syntax-highlighting
-  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  #source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+ 
+  #complete -o nospace -C $(brew --prefix)/bin/tk tk
 fi
 
 # Atuin setup (fancy shell history)
@@ -115,4 +115,3 @@ fi
 
 # Enable bash completion for specific commands
 autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/tk tk
