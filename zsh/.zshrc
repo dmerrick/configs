@@ -91,18 +91,15 @@ if type brew &>/dev/null; then
   fi
 
 
-  # Load zsh completions
-  #FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  #autoload -Uz compinit
-  #compinit
+  # Load zsh-autosuggestions (greys out tab-completable command from history)
+  _autosuggest=$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  [ -f $_autosuggest ] && source $_autosuggest
 
-  # Load zsh-autosuggestions
-  #source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  # Load zsh-syntax-highlighting (must be sourced last per upstream docs)
+  _syntax=$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  [ -f $_syntax ] && source $_syntax
 
-  # Load zsh-syntax-highlighting
-  #source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
- 
-  #complete -o nospace -C $(brew --prefix)/bin/tk tk
+  unset _autosuggest _syntax
 fi
 
 # Atuin setup (fancy shell history)
