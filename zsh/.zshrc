@@ -13,9 +13,6 @@ setopt PROMPT_SUBST
 PROMPT='%(?.%F{green}√.%F{red}?%?)%f ${vcs_info_msg_0_} %B%F{240}%1~%f%b %# '
 # PROMPT='${PWD/#$HOME/~} ${vcs_info_msg_0_} > '
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-
 # Add custom bin directory to PATH
 export PATH="$PATH:$HOME/bin"
 
