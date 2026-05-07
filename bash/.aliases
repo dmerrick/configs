@@ -43,10 +43,11 @@ g() {
   # tip: pass --dry-run or --bwlimit=KBPS or --stats
   sync_tv() {
      DATA_DIR="/Volumes/Shadyglen"
-    [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
-    cd $DATA_DIR && \
-    eval $RSYNC_CMD --exclude-from=.exclude_all_but_video $@ \
-    "seedbox:files/TV\ Shows" files/
+    # [ ! -d $DATA_DIR ] && echo $NODATAMSG && return 1
+    # cd $DATA_DIR && \
+    # eval $RSYNC_CMD --exclude-from=.exclude_all_but_video $@ \
+    echo $RSYNC_CMD $@ \
+    "seedbox:files/TV\ Shows" tallman:/volume1/Shadyglen/files/
     # seedbox:files/"TV\ Shows" files/
   }
   sync_tv_b() {
