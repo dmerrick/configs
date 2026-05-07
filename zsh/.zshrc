@@ -115,3 +115,4 @@ fi
 
 # Enable bash completion for specific commands
 autoload -U +X bashcompinit && bashcompinit
+export PATH="$HOME/.local/bin:$PATH"
