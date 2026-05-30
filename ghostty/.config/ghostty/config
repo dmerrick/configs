@@ -49,3 +49,8 @@
 # resize-overlay-duration = 4s 200ms
 
 copy-on-select = clipboard
+
+# Send Meta (Esc) when Option is pressed, so tmux Alt-key bindings
+# (e.g. Alt+Left / Alt+Right to switch windows) reach the terminal
+# instead of being eaten by macOS as special-character input.
+macos-option-as-alt = true
