@@ -4,3 +4,9 @@ vim/.vim/bundle
 vim/.vim/colors
 vim/.vim/black
 .DS_Store
+
+# k9s: track only config.yaml + aliases.yaml; ignore runtime state (logs,
+# per-cluster benchmark dirs, screen dumps) that k9s writes into K9S_CONFIG_DIR.
+k9s/*
+!k9s/config.yaml
+!k9s/aliases.yaml

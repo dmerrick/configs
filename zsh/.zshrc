@@ -70,6 +70,9 @@ alias devenv="ssh -t devenv-prod-cpu -- tmux new -A -s workspace"
 alias plex-restart='ssh home -- open -a "/Applications/Plex\ Media\ Server.app"'
 alias retry='while [ $? -ne 0 ]; do fc -e "#"; done'
 
+# Suppress zsh autocorrect for commands that collide with sibling dirs/files
+alias terraform='nocorrect terraform'
+
 # Set default editor to nvim if available
 if type nvim &>/dev/null; then
   export EDITOR=nvim
@@ -110,3 +113,7 @@ fi
 # Enable bash completion for specific commands
 autoload -U +X bashcompinit && bashcompinit
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Keep k9s config in the dotfiles repo (config.yaml + aliases.yaml tracked there)
+export K9S_CONFIG_DIR="$HOME/configs/k9s"
