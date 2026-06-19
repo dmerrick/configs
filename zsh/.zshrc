@@ -64,6 +64,10 @@ alias aws-dana-prod-developer="aws-vault exec adanalife-prod-developer --no-sess
 alias tf-dana-core="cd ~/adanalife/infra/terraform/core && aws-dana-core"
 alias tf-dana-stage="cd ~/adanalife/infra/terraform/stage-1 && aws-dana-stage"
 alias tf-dana-prod="cd ~/adanalife/infra/terraform/prod-1 && aws-dana-prod"
+# argocd --core reads argocd-cm from the kube-context namespace; argocd-minipc
+# is a context pinned to ns=argocd, so this works from any current namespace
+# (the ARGOCD_NAMESPACE env var does NOT override it). See vault infra/kubernetes.
+alias argo='argocd --core --kube-context argocd-minipc'
 alias devenv="ssh -t devenv-prod-cpu -- tmux new -A -s workspace"
 # alias devenv-up="aws-prod-west-2 -- aws ec2 start-instances --instance-ids i-0c15b75d6834e2a89 | jq -r '.StartingInstances[0].CurrentState.Name'"
 # alias devenv-down="aws-prod-west-2 -- aws ec2 stop-instances --instance-ids i-0c15b75d6834e2a89 | jq -r '.StoppingInstances[0].CurrentState.Name'"
