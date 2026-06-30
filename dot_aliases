@@ -21,14 +21,7 @@ g() {
  fi
 }
 
-# http://stackoverflow.com/a/27614878/1070080
-#function ssh () { /usr/bin/ssh -t $@ "tmux attach || tmux new || echo 'no tmux'"; }
-#function ssh () { autossh -t $@ "tmux -CC -A" }
-
-# os x only
-# if [ `uname` == 'Darwin' ];
-# then
-  # alias ls='ls -G'
+# macOS
   alias ls='lsd'
 
   # tried-and-true rsync options
@@ -120,13 +113,6 @@ g() {
     sync_audiobooks -n --no-verbose
   }
 
-# else
-#   alias ls='ls --color=always'
-
-#   alias pbcopy='xsel --clipboard --input'
-#   alias pbpaste='xsel --clipboard --output'
-# fi
-
 # ruby users get it
 alias b='bundle exec'
 
@@ -191,7 +177,7 @@ alias same='diff -sq'
 alias nocom='grep "^[^#]"'
 
 # what's my IP?
-alias myip="ifconfig eth0 | awk '/inet / { print $2 }' | sed 's/addr://'"
+alias myip="ipconfig getifaddr en0"
 # what's my external IP?
 #curl ipinfo.io
 
@@ -200,18 +186,6 @@ alias epoch="date +%s"
 
 # password generator
 we_have apg && alias password-generator='apg -qsa 0 -n 6 -m 8 -x 8 -E "Il1|0O" -M snCl'
-
-# allow subl over ssh
-# NOTE: this could be customized for any $EDITOR
-subl-ssh() {
-  if [ -z "$2" ]; then echo "Usage: subl-ssh server file" && return; fi
-  scp -q $1:$2 /tmp/$2 2>/dev/null && \
-  subl -w /tmp/$2 && \
-  scp -q /tmp/$2 $1:$2 2>/dev/null
-  rm /tmp/$2
-}
-
-alias s.="subl ."
 
 alias tmosh='() {mosh $* -- sh -c "tmux a || tmux"}'
 
@@ -234,43 +208,7 @@ man() {
 }
 
 
-# create a directory shortcut
-#a() { alias $1=cd\ $PWD; }
-
-# git aliases
-#alias gs='git status -s'
-#alias gc='git commit -m'
-#alias ga='git add -A'
-#alias gd='git diff | mate'
-#alias gds='git diff -- src/ | mate'
-
-# super safe file utils
-#alias rm='rm -i'
-#alias cp='cp -i'
-#alias mv='mv -i'
-
-# returns latest kernel info
-#alias kernelinfo='finger @kernel.org'
-
-# neat trick
-# telnet towel.blinkenlights.nl 23
-
-# crazy cursor trick
-# perl -e '$|++; printf "\e[%c", 65 + rand()*4 until select $x,$x,$x,0.02'
-
-# gentoo only
-#alias eix-sync='sudo eix-sync'
-
-# weather!
-# curl wttr.in/94117
-# curl wttr.in/Moon
-
-# cli pastebin
-#echo Hello world. | curl -F 'f:1=<-' ix.io
-
-# man hier
-
-# yes "$(seq 231 -1 16)" | while read i; do printf "\x1b[48;5;${i}mHi $USER\n"; sleep .02; done
+# weather:  curl wttr.in/<zip>   |   curl wttr.in/Moon
 
 # find by name
 alias f="find . -name"
@@ -282,13 +220,7 @@ alias mux='tmuxinator'
 
 alias workspace="tmuxinator start workspace"
 
-# good idea:
-# cd ~/other projects && git cl ___
-# alias td='echo $(date +%Y-%m-%d)'
-
 # bat is better than cat
 if we_have bat; then
   alias cat="bat -pp"
 fi
-
-alias poop="eval `ssh-agent` && ssh-add -K && ~/bin/tmux.sh movies"
