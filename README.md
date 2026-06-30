@@ -1,45 +1,57 @@
-# DANA'S CONFIGS
+# Dana's configs
 
-My dotfiles and other miscellaneous configs.
+My dotfiles, managed with [chezmoi](https://chezmoi.io).
 
-Symlinks will be created from your homedir to this project. Your existing setup (if any) will not be removed.
+Migrated from GNU Stow → chezmoi (2026-06). The repo is now chezmoi's source
+format: `dot_zshrc` → `~/.zshrc`, `private_dot_ssh/` → `~/.ssh/` (0600), etc.
 
-For a complete guide on setting up a Mac, see [Dana's Workstation Runlist](https://gist.github.com/dmerrick/5275190)
+## Bootstrap a new machine
 
-## How to Install
+One command installs chezmoi, clones this repo, and applies everything —
+dotfiles, then (on macOS) `brew bundle` and a few system defaults:
 
-* Clone this repo into your homedir
-* `cd ~/configs`
-* Make sure we have [GNU Stow](https://www.gnu.org/software/stow/)
-  * `brew install stow  # or apt or whatever`
-* `stow bash zsh git ghostty ruby tmux vim ssh other`
+```sh
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply dmerrick/configs
+```
 
+On Linux (e.g. the seedbox) the macOS-only configs — Hammerspoon, Finicky,
+SwiftBar — are skipped automatically via `.chezmoiignore`.
+
+## Day-to-day
+
+- `chezmoi edit ~/.zshrc` — edit a managed file (edits the source copy)
+- `chezmoi apply` — write pending changes to `$HOME`
+- `chezmoi diff` — preview what apply would change
+- `chezmoi re-add` — pull a live edit back into the source
+- `chezmoi cd` — open a shell in the source repo to commit/push
+
+On this machine the source is `~/configs` (set in `~/.config/chezmoi/chezmoi.toml`);
+a fresh `chezmoi init` defaults to `~/.local/share/chezmoi`. The `chezmoi`
+commands work the same either way.
+
+## What's tracked
+
+zsh, git, ghostty, tmux, vim, ssh, finicky, hammerspoon, the SwiftBar plugins,
+k9s config (applied to `~/.config/k9s`, read via `K9S_CONFIG_DIR`), `.aliases`,
+and the `Brewfile`. The bootstrap scripts live in `run_*.tmpl`.
 
 ## SwiftBar plugins
 
-The `swiftbar` package holds my menu-bar plugins (build-status indicators, etc).
-[SwiftBar](https://github.com/swiftbar/SwiftBar) is the menu-bar runner; the plugins
-themselves are written to the generic **[xbar](https://github.com/matryer/xbar)** plugin
-format (formerly **BitBar**) — plain scripts that print menu lines to stdout, with
-`<xbar.*>` metadata in the header. That format is portable across SwiftBar / xbar / BitBar.
+`Documents/Swiftbar/*.sh` are menu-bar plugins in the portable
+[xbar](https://github.com/matryer/xbar) format — plain scripts that print menu
+lines to stdout. SwiftBar reads them from `~/Documents/Swiftbar` (chezmoi
+creates that path on apply). The filename cadence (`name.1m.sh`) is the refresh
+interval.
 
-SwiftBar reads its plugins from a folder you point it at (mine is `~/Documents/Swiftbar`).
-Unlike the other packages, that target folder is **not** created by Stow — SwiftBar makes
-it on first launch (or create it and set it as the plugin folder in SwiftBar's prefs)
-*before* stowing, so the symlinks have somewhere to land:
+## Manual steps (not scriptable)
 
-* `stow swiftbar`
+After the bootstrap command, finish the GUI-only bits:
 
-The filename cadence (`name.1m.sh`, `name.1h.sh`) is the xbar refresh interval.
-
-
-## Migrating from setup.sh to GNU Stow
-* Find the files we need to remove
-  * `stow bash git ruby tmux vim other 2>&1 | awk '/not owned/ {print $NF}'`
-* Remove those files
-* Install using instructions above
-
-
-## How to Update
-
-* `confsync`
+- iCloud sign-in (leave Keychain sync off); enable FileVault
+- Keyboard: Caps Lock → Escape; disable autocorrect/capitalization
+- Sharing: set hostname; enable Screen Sharing + Remote Login
+- Sign in to 1Password, Resilio Sync, RescueTime, OmniFocus, Fantastical
+- Messages: enable iCloud Messages + SMS forwarding from iPhone
+- Make Chrome the default browser / `mailto:` handler
+- Generate an SSH key (`ssh-keygen -t ed25519`) and add it to GitHub
+- App Store: sign in (the `mas` entries in the Brewfile need a logged-in account)
