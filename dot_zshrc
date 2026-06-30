@@ -125,7 +125,6 @@ fi
 # Enable bash completion for specific commands
 autoload -U +X bashcompinit && bashcompinit
 export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
 
 # Keep k9s config in the dotfiles repo (config.yaml + aliases.yaml tracked there)
 export K9S_CONFIG_DIR="$HOME/.config/k9s"
