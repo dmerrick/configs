@@ -136,9 +136,6 @@ alias fucking='sudo'
 alias LS='ls'
 alias cd..='cd ..'
 
-# pull confs from github and run setup script
-alias confsync="cd ~/configs && ./setup.sh update && ./setup.sh"
-
 # vim
 if we_have vim
   then alias vi="vim"

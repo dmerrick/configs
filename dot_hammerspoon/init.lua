@@ -170,6 +170,37 @@ hs.hotkey.bind({ "alt", "cmd" }, "L", function() M.list(); hs.openConsole() end)
 hs.hotkey.bind({ "alt", "cmd" }, "C", hs.openConsole)
 
 -- ---------------------------------------------------------------------------
+-- Ghostty launchers
+--
+--   ⌃⌥⌘A  ~/adanalife  + claude (string-time)
+--   ⌃⌥⌘L  ~/life       + claude
+--   ⌃⌥⌘K  ~/caravelbio + claude
+--   ⌃⌥⌘↩  ~ (home)     plain login shell, no claude
+--
+-- Each opens a NEW Ghostty window, runs the command, then drops to `zsh -l`
+-- so the shell stays after claude exits (mirrors the default `command` in
+-- ~/configs/ghostty). string-time is a script, not a shell alias, so no -i needed.
+-- ---------------------------------------------------------------------------
+
+local STRING_TIME = "/Users/dmerrick/.local/bin/string-time"
+
+local function ghostty(dir, claude)
+  local inner = claude
+    and string.format('cd %q && %s; exec zsh -l', dir, STRING_TIME)
+    or string.format('cd %q; exec zsh -l', dir)
+  -- argv goes straight to open(1) — no shell, so `inner` needs no extra escaping.
+  hs.task.new("/usr/bin/open", nil,
+    { "-na", "Ghostty", "--args", "-e", "zsh", "-c", inner }):start()
+end
+
+local hyper = { "ctrl", "alt", "cmd" }
+local HOME = os.getenv("HOME")
+hs.hotkey.bind(hyper, "A", function() ghostty(HOME .. "/adanalife", true) end)
+hs.hotkey.bind(hyper, "L", function() ghostty(HOME .. "/life", true) end)
+hs.hotkey.bind(hyper, "K", function() ghostty(HOME .. "/caravelbio", true) end)
+hs.hotkey.bind(hyper, "return", function() ghostty(HOME, false) end)
+
+-- ---------------------------------------------------------------------------
 -- auto-reload this config when the file changes
 -- ---------------------------------------------------------------------------
 

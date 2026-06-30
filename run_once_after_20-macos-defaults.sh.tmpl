@@ -1,0 +1,8 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+set -e
+defaults write -g InitialKeyRepeat -int 10   # faster key repeat
+defaults write -g KeyRepeat -int 1
+defaults write com.apple.finder CreateDesktop -bool false   # hide desktop icons
+killall Finder 2>/dev/null || true
+{{ end -}}

@@ -92,3 +92,5 @@
 	hyperlinks = true
 	; hyperlinks-commit-link-format = "https://invent.kde.org/utilities/konsole/-/commit/{commit}"
 	; side-by-side = true
+[includeIf "gitdir:~/caravelbio/"]
+	path = ~/.gitconfig-caravelbio

@@ -114,10 +114,18 @@ if type atuin &>/dev/null; then
   eval "$(atuin init zsh --disable-up-arrow)"
 fi
 
+# mise — runtime version manager. `activate` installs a chpwd hook that exports
+# each directory's .mise.toml [env] (e.g. per-cloud CLOUDSDK_CONFIG / BROWSER) and
+# puts pinned tool versions on PATH — so bare commands Just Work in a tree without
+# needing `mise exec --`. Remove this line to go back to explicit `mise exec`.
+if type mise &>/dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
 # Enable bash completion for specific commands
 autoload -U +X bashcompinit && bashcompinit
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Keep k9s config in the dotfiles repo (config.yaml + aliases.yaml tracked there)
-export K9S_CONFIG_DIR="$HOME/configs/k9s"
+export K9S_CONFIG_DIR="$HOME/.config/k9s"

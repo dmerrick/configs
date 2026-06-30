@@ -1,0 +1,11 @@
+# source-only files (never written to $HOME)
+Brewfile
+README.md
+runlist.md
+
+{{ if ne .chezmoi.os "darwin" -}}
+# macOS-only tools — skipped on Linux (seedbox, etc.)
+.hammerspoon
+.finicky.js
+Documents
+{{- end }}

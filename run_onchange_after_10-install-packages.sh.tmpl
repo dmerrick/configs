@@ -1,0 +1,9 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+if ! command -v brew >/dev/null 2>&1; then
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+brew trust jonof/kenutils 2>/dev/null || true   # niche tap (pngout): pre-trust for non-interactive bundle
+HOMEBREW_NO_AUTO_UPDATE=1 brew bundle --no-upgrade --file="{{ .chezmoi.sourceDir }}/Brewfile"
+{{ end -}}
