@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# poke-tmux [-f] <when> [tmux-target] — send Enter to a tmux pane at a future time.
+#   <when> is a duration (4h18m, 90m, 30s) or a clock time (3pm, 3:30pm, 14:30).
+#   [tmux-target] defaults to the currently-active pane (session:window.pane).
+#
+# Detached by default: the timer is parked as a new window in the session that
+# originated the poke, so the tmux server — not the caller — owns it and it
+# survives the calling shell/process (e.g. a Claude session hitting its token
+# limit). The window closes itself once it fires.
+#   -f, --foreground  run the timer inline in this shell instead of detaching.
+set -euo pipefail
+
+cur_pane()    { tmux display-message -p '#{session_name}:#{window_index}.#{pane_index}'; }
+cur_session() { tmux display-message -p '#{session_name}'; }
+
+fg=false
+case "${1:-}" in
+  -f|--foreground) fg=true; shift ;;
+  -d|--detach)     shift ;;  # detach is the default now; accepted for back-compat
+esac
+
+if [ $# -eq 0 ]; then
+  cat <<EOF
+current pane: $(cur_pane)
+
+usage: poke-tmux <when> [tmux-target]   (detaches by default)
+  poke-tmux 4h18m              # Enter to this pane in 4h18m
+  poke-tmux 3pm               # Enter to this pane at 3:00pm (tomorrow if past)
+  poke-tmux 14:30 0:2.1       # Enter to pane 0:2.1 at 2:30pm
+  poke-tmux -f 5h &           # foreground: run inline (background with &)
+
+list all panes:  tmux list-panes -a -F '#{session_name}:#{window_index}.#{pane_index}  #{pane_current_command}'
+EOF
+  exit 0
+fi
+
+when="$1"
+target="${2:-$(cur_pane)}"
+now=$(date +%s)
+
+# clock time: try a few BSD-date formats. BSD date bleeds unspecified fields from
+# now, so give am/pm and bare-hour inputs explicit minutes, and try am/pm first.
+parse_clock() {
+  local t d fmt e; t=$(echo "$1" | tr 'a-z' 'A-Z'); d=$(date +%Y-%m-%d)
+  [[ $t =~ ^[0-9]{1,2}(AM|PM)$ ]] && t="${t%[AP]M}:00${t: -2}"
+  [[ $t =~ ^[0-9]{1,2}$ ]] && t="$t:00"
+  for fmt in "%I:%M%p" "%H:%M"; do
+    e=$(date -j -f "%Y-%m-%d $fmt" "$d $t" +%s 2>/dev/null) && { echo "$e"; return; }
+  done
+  return 1
+}
+
+if [[ $when == @* ]]; then
+  at=${when#@}                                        # absolute epoch handed down by the detach parent
+elif [[ $when != "" && $when =~ ^([0-9]+h)?([0-9]+m)?([0-9]+s)?$ ]]; then
+  h=${BASH_REMATCH[1]%h}; m=${BASH_REMATCH[2]%m}; s=${BASH_REMATCH[3]%s}
+  at=$(( now + ${h:-0}*3600 + ${m:-0}*60 + ${s:-0} ))
+elif at=$(parse_clock "$when"); then
+  [ "$at" -le "$now" ] && at=$((at + 86400))
+else
+  echo "can't parse time: '$when' (want 4h18m or 3pm or 14:30)" >&2; exit 1
+fi
+
+# Detach: park the timer as a new window in the originating session. Resolve the
+# target and epoch NOW (in the child, "current pane" would be the poke window),
+# and hand the epoch down as @<epoch> so the child doesn't re-parse.
+if ! $fg; then
+  self=$(command -v "$0" || echo "$0")
+  origin=$(cur_session)
+  tmux new-window -d -t "$origin" -n "poke ${when#@}" "'$self' -f '@$at' '$target'"
+  echo "detached: poking $target at $(date -r "$at" '+%H:%M') — window in session '$origin' (survives this shell & Claude process)"
+  exit 0
+fi
+
+echo "poking $target at $(date -r "$at" '+%H:%M') ($(( (at - now + 59) / 60 )) min from now)"
+sleep $((at - now))
+tmux send-keys -t "$target" Enter
