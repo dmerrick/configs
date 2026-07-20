@@ -67,7 +67,10 @@ fi
 if ! $fg; then
   self=$(command -v "$0" || echo "$0")
   origin=$(cur_session)
-  tmux new-window -d -t "$origin" -n "poke ${when#@}" "'$self' -f '@$at' '$target'"
+  # Target an explicit free index. Bare -t "$origin" lets tmux auto-pick, which
+  # fails with "index 0 in use" when the session has a gap below base-index.
+  idx=$(( $(tmux list-windows -t "$origin" -F '#{window_index}' | sort -n | tail -1) + 1 ))
+  tmux new-window -d -t "$origin:$idx" -n "poke ${when#@}" "'$self' -f '@$at' '$target'"
   echo "detached: poking $target at $(date -r "$at" '+%H:%M') — window in session '$origin' (survives this shell & Claude process)"
   exit 0
 fi
