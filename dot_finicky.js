@@ -45,7 +45,10 @@ const CARAVEL_HOSTS = [
   "slack.com",
   "zoom.us",
   "github.com",
-  "raw.githubusercontent.com"
+  "raw.githubusercontent.com",
+  "canva.com",
+  "canva.site",
+  "sharepoint.com"
 ];
 
 export default {
@@ -72,6 +75,11 @@ export default {
         return k.command && k.option;
       },
       browser: firefoxProfile("Personal")
+    },
+    {
+      // Tailscale (admin console + ts.net machine URLs) → ADanaLife
+      match: hostIn("tailscale.com", "ts.net"),
+      browser: firefoxProfile("ADanaLife")
     },
     {
       // adanalife's own GitHub stays on the ADanaLife profile.
