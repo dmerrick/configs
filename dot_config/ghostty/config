@@ -58,7 +58,5 @@ macos-option-as-alt = true
 keybind = page_up=scroll_page_up
 keybind = page_down=scroll_page_down
 
-command = zsh -c "cd /Users/dmerrick/adanalife && /Users/dmerrick/.local/bin/string-time; exec zsh -l"
-
 bell-features = audio
 bell-audio-path = /System/Library/Sounds/Submarine.aiff
