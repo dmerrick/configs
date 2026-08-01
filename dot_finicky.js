@@ -48,6 +48,8 @@ const CARAVEL_HOSTS = [
   "raw.githubusercontent.com",
   "canva.com",
   "canva.site",
+  // Canva's share shortener; 301s to www.canva.com but is its own domain.
+  "canva.link",
   "sharepoint.com"
 ];
 
