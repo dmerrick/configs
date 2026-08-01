@@ -35,6 +35,17 @@ const firefoxProfile = (name) => (url) => ({
 const hostIn = (...domains) => (url) =>
   domains.some((d) => url.hostname === d || url.hostname.endsWith(`.${d}`));
 
+// Hosts that belong to the ADanaLife profile. Cloudflare is here because the
+// fleet's Pages projects, D1 databases and DNS live in the adanalife account —
+// which also routes `wrangler login`, since it hands its OAuth URL to the
+// system default browser and ignores $BROWSER.
+const ADANALIFE_HOSTS = [
+  "tailscale.com",
+  // Tailscale machine URLs.
+  "ts.net",
+  "cloudflare.com"
+];
+
 // Hosts that belong to the Caravel (company) profile. raw.githubusercontent.com
 // isn't a *.github.com host, so it's listed explicitly.
 const CARAVEL_HOSTS = [
@@ -79,8 +90,8 @@ export default {
       browser: firefoxProfile("Personal")
     },
     {
-      // Tailscale (admin console + ts.net machine URLs) → ADanaLife
-      match: hostIn("tailscale.com", "ts.net"),
+      // ADanaLife hosts → ADanaLife
+      match: hostIn(...ADANALIFE_HOSTS),
       browser: firefoxProfile("ADanaLife")
     },
     {
