@@ -1,0 +1,11 @@
+#!/bin/bash
+{{ if eq .chezmoi.os "darwin" -}}
+# finicky config hash: {{ include "dot_finicky.js" | sha256sum }}
+# Finicky's config watcher misses chezmoi's atomic rename, so it keeps serving
+# the stale bundled config until restarted.
+if pgrep -x Finicky >/dev/null; then
+  osascript -e 'quit app "Finicky"'
+  sleep 1
+  open -a Finicky
+fi
+{{ end -}}
