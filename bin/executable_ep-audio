@@ -1,0 +1,227 @@
+#!/usr/bin/env python3
+"""Rip a directory of TV episodes down to small tagged audio files.
+
+./ep-audio.py ~/shows/Frasier            # -> ~/shows/Frasier/audio/*.m4a
+./ep-audio.py ~/shows/Frasier -o ~/sync -b 48k
+./ep-audio.py --selftest
+"""
+
+import argparse
+import concurrent.futures
+import os
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+VIDEO_EXT = {".mkv", ".mp4", ".avi", ".m4v", ".mov", ".ts", ".wmv", ".mpg", ".webm"}
+
+EPISODE = re.compile(r"(?i)s(\d{1,2})[ ._-]?e(\d{1,3})|\b(\d{1,2})x(\d{2})\b")
+
+# release-group cruft; the title ends where this begins
+JUNK = re.compile(
+    r"(?i)\b(720p|1080p|2160p|480p|4k|x264|x265|h ?264|h ?265|hevc|xvid|divx|remux"
+    r"|web[ ._-]?dl|web[ ._-]?rip|webrip|bluray|blu[ ._-]?ray|bdrip|brrip|hdtv|dvdrip|dvd"
+    r"|aac2?[ ._-]?\d?|ac3|eac3|dd5[ ._-]?1|dts|flac|10bit|8bit|hdr|sdr"
+    r"|proper|repack|internal|extended|uncut|amzn|nf|hmax|dsnp|atvp|ita|eng)\b"
+)
+
+
+def clean(s: str) -> str:
+    s = re.sub(r"[._]+", " ", s)
+    s = re.sub(
+        r"\s-|-\s", " ", s
+    )  # a hyphen next to a space is a separator; X-Files is not
+    s = re.sub(r"\s+", " ", s).strip(" .-_")
+    if s.islower():  # scene releases are all-lowercase; tags shouldn't be
+        s = re.sub(r"(^|\s)(\w)", lambda m: m.group(1) + m.group(2).upper(), s)
+    return s
+
+
+def parse(path: Path) -> dict:
+    """Pull show/season/episode/title out of a filename, falling back to parent dirs."""
+    stem = path.stem
+    m = EPISODE.search(stem)
+    season, episode = None, None
+    if m:
+        season, episode = (
+            (m.group(1), m.group(2)) if m.group(1) else (m.group(3), m.group(4))
+        )
+        show, title = clean(stem[: m.start()]), clean(stem[m.end() :])
+    else:
+        show, title = "", clean(stem)
+
+    j = JUNK.search(title)
+    if j:
+        title = clean(title[: j.start()])
+
+    if not show:
+        # ".../Frasier/Season 3/03 - Whatever.mkv" -> hop over the season dir
+        parents = [p.name for p in path.parents]
+        show = next(
+            (
+                p
+                for p in parents[:2]
+                if not re.fullmatch(r"(?i)(season[ ._-]*\d+|s\d+)", p)
+            ),
+            parents[0] if parents else "Unknown",
+        )
+    if season is None:
+        sm = re.search(r"(?i)season[ ._-]*(\d+)|^s(\d+)$", path.parent.name)
+        season = (sm.group(1) or sm.group(2)) if sm else "1"
+
+    return {
+        "show": clean(show) or "Unknown",
+        "season": int(season),
+        "episode": int(episode) if episode else 0,
+        "title": title,
+    }
+
+
+def convert(src: Path, outdir: Path, bitrate: str) -> str:
+    info = parse(src)
+    label = (
+        f"S{info['season']:02d}E{info['episode']:02d}" if info["episode"] else src.stem
+    )
+    name = f"{label} - {info['title']}" if info["title"] else label
+    dst = outdir / (re.sub(r"[/:]", "-", name) + ".m4a")
+    if dst.exists():
+        return f"skip  {dst.name}"
+
+    tags = {
+        "title": info["title"] or label,
+        "artist": info["show"],
+        "album_artist": info["show"],
+        "album": f"{info['show']} S{info['season']:02d}",
+        "track": str(info["episode"]),
+        "disc": str(info["season"]),
+        "genre": "TV",
+        "comment": src.name,
+    }
+    tmp = dst.with_suffix(".m4a.part")
+    cmd = [
+        "ffmpeg",
+        "-nostdin",
+        "-v",
+        "error",
+        "-y",
+        "-i",
+        str(src),
+        # ponytail: first audio stream. Add a language filter if your rips are multi-dub.
+        "-map",
+        "0:a:0",
+        "-vn",
+        "-sn",
+        "-dn",
+        "-map_metadata",
+        "-1",
+        "-ac",
+        "1",
+        "-c:a",
+        "aac",
+        "-b:a",
+        bitrate,
+        "-movflags",
+        "+faststart",
+        "-f",
+        "ipod",  # the .part suffix hides the m4a muxer from ffmpeg
+    ]
+    for k, v in tags.items():
+        cmd += ["-metadata", f"{k}={v}"]
+    cmd.append(str(tmp))
+
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode:
+        tmp.unlink(missing_ok=True)
+        return f"FAIL  {src.name}: {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else '?'}"
+    tmp.rename(dst)
+    return f"ok    {dst.name}  ({dst.stat().st_size // 1024 // 1024}MB)"
+
+
+def convert_safe(src: Path, outdir: Path, bitrate: str) -> str:
+    # ponytail: one OSError (a network share dropping mid-run) must not take the whole
+    # pool down -- pool.map re-raises, killing every encode that hadn't started yet.
+    try:
+        return convert(src, outdir, bitrate)
+    except OSError as e:
+        return f"FAIL  {src.name}: {e}"
+
+
+def selftest():
+    p = parse(
+        Path(
+            "/tv/Frasier/Season 3/Frasier.S03E12.Come.Lie.With.Me.1080p.WEB-DL.x264.mkv"
+        )
+    )
+    assert p == {
+        "show": "Frasier",
+        "season": 3,
+        "episode": 12,
+        "title": "Come Lie With Me",
+    }, p
+    p = parse(Path("/tv/The X-Files/3x04 - Clyde Bruckman's Final Repose.avi"))
+    assert p == {
+        "show": "The X-Files",
+        "season": 3,
+        "episode": 4,
+        "title": "Clyde Bruckman's Final Repose",
+    }, p
+    p = parse(Path("/tv/Cheers/Season 01/cheers_s01e02_sam's women_720p.mkv"))
+    assert p == {"show": "Cheers", "season": 1, "episode": 2, "title": "Sam's Women"}, p
+    p = parse(Path("/tv/Columbo/some special.mp4"))  # no episode tag anywhere
+    assert p == {
+        "show": "Columbo",
+        "season": 1,
+        "episode": 0,
+        "title": "Some Special",
+    }, p
+    print("selftest ok")
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    ap.add_argument(
+        "dir", nargs="?", type=Path, help="directory of episodes (searched recursively)"
+    )
+    ap.add_argument("-o", "--outdir", type=Path, help="default: <dir>/audio")
+    ap.add_argument(
+        "-b", "--bitrate", default="32k", help="mono AAC bitrate (default 32k)"
+    )
+    ap.add_argument(
+        "-j", "--jobs", type=int, default=max(1, (os.cpu_count() or 4) // 2)
+    )
+    ap.add_argument("--selftest", action="store_true")
+    args = ap.parse_args()
+
+    if args.selftest:
+        return selftest()
+    if not args.dir or not args.dir.is_dir():
+        ap.error("give me a directory of episodes")
+
+    srcs = sorted(p for p in args.dir.rglob("*") if p.suffix.lower() in VIDEO_EXT)
+    if not srcs:
+        sys.exit(f"no video files under {args.dir}")
+
+    outdir = args.outdir or args.dir / "audio"
+    outdir.mkdir(parents=True, exist_ok=True)
+
+    # A killed run leaves .part files behind; they're always garbage, since a finished
+    # encode is renamed off that name. Sweeping them makes a re-run fully idempotent.
+    # ponytail: assumes no second ep-audio is writing this outdir right now.
+    stale = list(outdir.glob("*.m4a.part"))
+    for p in stale:
+        p.unlink(missing_ok=True)
+    if stale:
+        print(f"cleaned {len(stale)} stale .part file(s)")
+
+    print(f"{len(srcs)} episodes -> {outdir}")
+
+    with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
+        for line in pool.map(lambda s: convert_safe(s, outdir, args.bitrate), srcs):
+            print(line, flush=True)
+
+
+if __name__ == "__main__":
+    main()
