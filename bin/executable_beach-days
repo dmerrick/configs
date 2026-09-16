@@ -3,7 +3,8 @@
 
 Small Point beach is only walkable at low tide. This crosses NOAA tide predictions
 with the NWS forecast and writes one event per day where a low tide lands in a
-civilized window AND the weather is worth the drive.
+civilized window. The weather barely gates at all — an otherwise nice day is
+worth surfacing — it picks the emoji so the verdict reads off the calendar.
 
     beach-days            # dry run, prints what it would add
     beach-days --write    # actually create the events
@@ -21,8 +22,8 @@ CALENDAR  = "Maine"
 DAYS      = 14                 # NWS only forecasts ~7; tides go the full range
 EARLIEST  = 11                 # Dana won't go before 11am
 LATEST    = 19                 # and not after dark
-MIN_TEMP  = 70                 # °F, NWS daytime high
-MAX_POP   = 30                 # % precip probability
+MIN_TEMP  = 55                 # °F — below this it is not a beach, it is a walk
+MAX_POP   = 70                 # % precip — only a near-certain soaking is disqualifying
 TIDE_PAD  = timedelta(hours=2) # event spans low tide ± this
 UA        = {"User-Agent": "beach-days (dana@caravel.bio)"}
 SEEN      = pathlib.Path.home() / ".beach-days-seen"   # events already created
@@ -46,6 +47,32 @@ def daytime_forecast():
     fc = get(get(f"https://api.weather.gov/points/{LATLON}")["properties"]["forecast"])
     return {datetime.fromisoformat(p["startTime"]).date(): p
             for p in fc["properties"]["periods"] if p["isDaytime"]}
+
+
+# First match wins. Ordered worst-to-best so a bad sky beats a warm number.
+CONDITIONS = [
+    ("snow sleet wintry",      "🌨"),
+    ("thunder storm",          "⛈"),
+    ("rain shower drizzle",    "🌧"),
+    ("fog haze",               "🌫"),
+    ("wind breezy",            "🌬"),
+]
+
+
+def emoji(period):
+    """A glyph for the day, so the calendar is skimmable without opening anything."""
+    sky = period["shortForecast"].lower()
+    pop = (period.get("probabilityOfPrecipitation") or {}).get("value") or 0
+    if pop >= 50:
+        return "🌧"
+    for words, glyph in CONDITIONS:
+        if any(w in sky for w in words.split()):
+            return glyph
+    if "cloud" in sky or "overcast" in sky:
+        return "☁️"
+    if period["temperature"] >= 70:
+        return "🏖"          # the real thing: warm and clear
+    return "😎"              # clear but cool — still a good walk
 
 
 def verdict(when, period):
@@ -98,9 +125,9 @@ def add_event(title, start, end, notes):
     """Idempotent via a seen-file: an AppleScript `whose summary is ...` query over
     Calendar.app takes minutes, a one-line file takes none.
     ponytail: delete SEEN to re-add everything."""
-    key = f"{start:%Y-%m-%d} {title}"
+    key = f"{start:%Y-%m-%d %H:%M}"   # the tide, not the title — the forecast changes
     seen = SEEN.read_text().splitlines() if SEEN.exists() else []
-    if any(line.endswith(key) for line in seen):
+    if any(line.split("\t")[1:2] == [key] for line in seen):
         return False
     uid = osa(MKDATE + f'''tell application "Calendar"
       tell calendar "{CALENDAR}"
@@ -108,7 +135,7 @@ def add_event(title, start, end, notes):
         return uid of e
       end tell
     end tell''')
-    SEEN.write_text("\n".join(seen + [f"{uid}\t{key}"]) + "\n")
+    SEEN.write_text("\n".join(seen + [f"{uid}\t{key}\t{title}"]) + "\n")
     return True
 
 
@@ -123,11 +150,12 @@ def main(write):
         if why_not:
             print(f"  {when:%a %b %-d}  skip — {why_not}")
             continue
-        title = f"🏖 Small Point — low tide {when:%-I:%M %p}"
+        title = (f"{emoji(period)} Small Point — low tide {when:%-I:%M %p}, "
+                 f"{period['temperature']}°F {period['shortForecast']}")
         notes = (f"Low tide {height:.1f} ft at {when:%-I:%M %p} (NOAA {STATION}). "
                  f"{period['detailedForecast']}").replace('"', "'")
         if not write:
-            print(f"  {when:%a %b %-d}  WOULD ADD  {title}  ({period['temperature']}°F)")
+            print(f"  {when:%a %b %-d}  WOULD ADD  {title}")
             continue
         added = add_event(title, when - TIDE_PAD, when + TIDE_PAD, notes)
         print(f"  {when:%a %b %-d}  {'added' if added else 'already there'}  {title}")
@@ -136,13 +164,26 @@ def main(write):
 
 
 def test():
-    p = lambda t, pop: {"temperature": t, "probabilityOfPrecipitation": {"value": pop}}
+    p = lambda t, pop, sky="Sunny": {"temperature": t, "shortForecast": sky,
+                                     "probabilityOfPrecipitation": {"value": pop}}
+    assert emoji(p(75, 0)) == "🏖"
+    assert emoji(p(58, 0)) == "😎"                          # cool but clear still surfaces
+    assert emoji(p(75, 0, "Mostly Cloudy")) == "☁️"
+    assert emoji(p(75, 10, "Chance Rain Showers")) == "🌧"  # sky beats a low pop
+    assert emoji(p(75, 60, "Sunny")) == "🌧"                # pop beats a nice-sounding sky
+    assert emoji(p(75, 0, "Chance Thunderstorms")) == "⛈"
+    assert emoji(p(40, 0, "Snow")) == "🌨"
+    assert emoji(p(75, 0, "Patchy Fog")) == "🌫"
+    assert emoji({"temperature": 75, "shortForecast": "Sunny",
+                  "probabilityOfPrecipitation": None}) == "🏖"
     d = datetime(2026, 9, 20, 13, 0)
     assert verdict(d, p(75, 10)) is None
     assert verdict(d.replace(hour=8), p(75, 10)) == "low tide at 8:00 AM"
     assert verdict(d.replace(hour=20), p(75, 10)) == "low tide at 8:00 PM"
-    assert verdict(d, p(60, 10)) == "only 60°F"
-    assert verdict(d, p(75, 80)) == "80% chance of rain"
+    assert verdict(d, p(60, 10)) is None          # 60°F now surfaces
+    assert verdict(d, p(50, 10)) == "only 50°F"
+    assert verdict(d, p(75, 60)) is None           # 60% rain now surfaces
+    assert verdict(d, p(75, 90)) == "90% chance of rain"
     assert verdict(d, {"temperature": 75, "probabilityOfPrecipitation": None}) is None  # null pop
     assert verdict(d, None) == "beyond the forecast"
     assert asdate(datetime(2026, 9, 19, 9, 47)) == "(my mkdate(2026, 9, 19, 35220))"
