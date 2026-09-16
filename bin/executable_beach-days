@@ -1,32 +1,37 @@
 #!/usr/bin/env python3
-"""Put "good beach day" windows on the Maine calendar.
+"""Put "good beach day" windows on a Beach Days calendar.
 
 Small Point beach is only walkable at low tide. This crosses NOAA tide predictions
-with the NWS forecast and writes one event per day where a low tide lands in a
-civilized window. The weather barely gates at all — an otherwise nice day is
-worth surfacing — it picks the emoji so the verdict reads off the calendar.
+with the NWS forecast and writes one event per low tide that lands in a civilized
+window. The weather barely gates at all — an otherwise nice day is worth surfacing
+— it picks the emoji so the verdict reads off the calendar.
 
-    beach-days            # dry run, prints what it would add
-    beach-days --write    # actually create the events
+Each run reconciles: events are created, updated in place as the forecast firms up,
+and deleted when a window stops qualifying. The calendar IS the state; there is no
+seen-file.
+
+    beach-days            # dry run, prints the plan
+    beach-days --write    # apply it
     beach-days --test     # self-check, no network
 
 ponytail: no config file, no cache, no DB. Tune the constants below.
 """
-import json, pathlib, subprocess, sys, urllib.request
+import json, subprocess, sys, urllib.request
 from datetime import datetime, timedelta
 
 # --- knobs -------------------------------------------------------------------
-STATION   = "8417177"          # NOAA Fort Popham, Hunniwell Point ME (~4 mi from Small Point)
-LATLON    = "43.755,-69.785"   # the tide station itself (Hunniwell Point) — same NWS grid as the beach
-CALENDAR  = "Maine"
+STATION   = "8417177"          # NOAA Fort Popham, Hunniwell Point ME
+LATLON    = "43.755,-69.785"   # the tide station itself — same NWS grid as the beach
+CALENDAR  = "Beach Days"       # dedicated: reconciling needs a calendar small enough
+                               # to scan, and Calendar.app cannot query a big one
 DAYS      = 14                 # NWS only forecasts ~7; tides go the full range
 EARLIEST  = 11                 # Dana won't go before 11am
 LATEST    = 19                 # and not after dark
 MIN_TEMP  = 55                 # °F — below this it is not a beach, it is a walk
 MAX_POP   = 70                 # % precip — only a near-certain soaking is disqualifying
+WARM_EBB  = (16, 19)           # a low tide in this window drains a sun-baked marsh
 TIDE_PAD  = timedelta(hours=2) # event spans low tide ± this
 UA        = {"User-Agent": "beach-days (dana@caravel.bio)"}
-SEEN      = pathlib.Path.home() / ".beach-days-seen"   # events already created
 
 
 def get(url):
@@ -49,21 +54,23 @@ def daytime_forecast():
             for p in fc["properties"]["periods"] if p["isDaytime"]}
 
 
+# --- what kind of day is it --------------------------------------------------
+
 # First match wins. Ordered worst-to-best so a bad sky beats a warm number.
 CONDITIONS = [
-    ("snow sleet wintry",      "🌨"),
-    ("thunder storm",          "⛈"),
-    ("rain shower drizzle",    "🌧"),
-    ("fog haze",               "🌫"),
-    ("wind breezy",            "🌬"),
+    ("snow sleet wintry",   "🌨"),
+    ("thunder storm",       "⛈"),
+    ("rain shower drizzle", "🌧"),
+    ("fog haze",            "🌫"),
+    ("wind breezy",         "🌬"),
 ]
+SUNNY = ("🏖", "😎")
 
 
 def emoji(period):
     """A glyph for the day, so the calendar is skimmable without opening anything."""
     sky = period["shortForecast"].lower()
-    pop = (period.get("probabilityOfPrecipitation") or {}).get("value") or 0
-    if pop >= 50:
+    if pop_of(period) >= 50:
         return "🌧"
     for words, glyph in CONDITIONS:
         if any(w in sky for w in words.split()):
@@ -75,6 +82,26 @@ def emoji(period):
     return "😎"              # clear but cool — still a good walk
 
 
+def pop_of(period):
+    return (period.get("probabilityOfPrecipitation") or {}).get("value") or 0
+
+
+def warm_water(when, period):
+    """Is this a warm-water day?
+
+    The marsh fills at high tide, sits in the sun all afternoon, and then drains
+    back into the river on the ebb — so a LATE-afternoon low tide means the whole
+    sunny afternoon's worth of warmed water is running past you. High tide is
+    ~6h before low, so a 4-7pm low puts the fill around 10am-1pm: a full soak.
+
+    Needs actual sun on the marsh during that soak, so a grey day kills it.
+
+    ponytail: a heuristic, not a thermal model. If the river disagrees, move
+    WARM_EBB — that is the calibration knob.
+    """
+    return WARM_EBB[0] <= when.hour < WARM_EBB[1] and emoji(period) in SUNNY
+
+
 def verdict(when, period):
     """None if it's a good beach window, else the reason it isn't."""
     if not EARLIEST <= when.hour < LATEST:
@@ -83,30 +110,26 @@ def verdict(when, period):
         return "beyond the forecast"
     if period["temperature"] < MIN_TEMP:
         return f"only {period['temperature']}°F"
-    pop = (period.get("probabilityOfPrecipitation") or {}).get("value") or 0
-    if pop > MAX_POP:
-        return f"{pop}% chance of rain"
+    if pop_of(period) > MAX_POP:
+        return f"{pop_of(period)}% chance of rain"
     return None
 
 
-def osa(script):
-    subprocess.run(["open", "-ga", "Calendar"], check=False)  # -600 if it isn't running
-    r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
-    if r.returncode:
-        sys.exit(f"osascript failed: {r.stderr.strip()}")
-    return r.stdout.strip()
+def describe(when, height, period):
+    """(title, notes) for the event."""
+    warm = warm_water(when, period)
+    glyph = "🏊" if warm else emoji(period)
+    title = (f"{glyph} Small Point — low tide {when:%-I:%M %p}, "
+             f"{period['temperature']}°F {period['shortForecast']}")
+    notes = f"Low tide {height:.1f} ft at {when:%-I:%M %p} (NOAA {STATION}).\n"
+    if warm:
+        notes += ("Warm water: the marsh filled this morning, baked all afternoon, and is "
+                  "draining into the river right through this window.\n")
+    notes += period["detailedForecast"]
+    return title, notes.replace('"', "'").replace("\n", " ")
 
 
-def asdate(dt):
-    """An AppleScript date expression for `dt`.
-
-    ponytail: NOT `date "2026-09-19 09:47:00"` — AppleScript parses that
-    locale-dependently and silently produced October 9, year 12187. Setting the
-    components one at a time is the only unambiguous form. Day goes to 1 first so
-    setting month cannot overflow a 31st into the next month.
-    """
-    return f"(my mkdate({dt.year}, {dt.month}, {dt.day}, {dt.hour * 3600 + dt.minute * 60}))"
-
+# --- Calendar.app ------------------------------------------------------------
 
 MKDATE = """
 on mkdate(y, m, d, secs)
@@ -121,27 +144,93 @@ end mkdate
 """
 
 
-def add_event(title, start, end, notes):
-    """Idempotent via a seen-file: an AppleScript `whose summary is ...` query over
-    Calendar.app takes minutes, a one-line file takes none.
-    ponytail: delete SEEN to re-add everything."""
-    key = f"{start:%Y-%m-%d %H:%M}"   # the tide, not the title — the forecast changes
-    seen = SEEN.read_text().splitlines() if SEEN.exists() else []
-    if any(line.split("\t")[1:2] == [key] for line in seen):
-        return False
-    uid = osa(MKDATE + f'''tell application "Calendar"
+def asdate(dt):
+    """An AppleScript date expression for `dt`.
+
+    ponytail: NOT `date "2026-09-19 09:47:00"` — AppleScript parses that
+    locale-dependently and silently produced October 9, year 12187. Setting the
+    components one at a time is the only unambiguous form. Day goes to 1 first so
+    setting month cannot overflow a 31st into the next month.
+    """
+    return f"(my mkdate({dt.year}, {dt.month}, {dt.day}, {dt.hour * 3600 + dt.minute * 60}))"
+
+
+def osa(script):
+    subprocess.run(["open", "-ga", "Calendar"], check=False)  # -600 if it isn't running
+    r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
+    if r.returncode:
+        sys.exit(f"osascript failed: {r.stderr.strip()}")
+    return r.stdout.strip()
+
+
+def existing():
+    """{start-datetime: (uid, summary)} for everything currently on the calendar.
+
+    Keyed by start date because that is what a low tide determines. A plain
+    `every event` scan is only tractable because this calendar holds a handful of
+    events — the same scan against a full personal calendar never returns.
+    """
+    osa(f'''tell application "Calendar"
+      if not (exists calendar "{CALENDAR}") then make new calendar with properties {{name:"{CALENDAR}"}}
+    end tell''')
+    out = osa(f'''tell application "Calendar"
       tell calendar "{CALENDAR}"
-        set e to make new event with properties {{summary:"{title}", start date:{asdate(start)}, end date:{asdate(end)}, description:"{notes}"}}
-        return uid of e
+        set out to ""
+        repeat with e in (every event)
+          set d to start date of e
+          set out to out & (uid of e) & tab & (year of d as string) & "-" & (month of d as integer as string) & "-" & (day of d as string) & "-" & (hours of d as string) & "-" & (minutes of d as string) & tab & (summary of e) & linefeed
+        end repeat
+        return out
       end tell
     end tell''')
-    SEEN.write_text("\n".join(seen + [f"{uid}\t{key}\t{title}"]) + "\n")
-    return True
+    found = {}
+    for line in out.splitlines():
+        if not line.strip():
+            continue
+        uid, stamp, summary = line.split("\t", 2)
+        y, mo, d, h, mi = (int(x) for x in stamp.split("-"))
+        found[datetime(y, mo, d, h, mi)] = (uid, summary)
+    return found
+
+
+def apply(creates, updates, deletes):
+    """One osascript round trip for the whole reconcile — each one costs ~15s."""
+    body = ""
+    for start, end, title, notes in creates:
+        body += (f'    make new event with properties {{summary:"{title}", '
+                 f'start date:{asdate(start)}, end date:{asdate(end)}, description:"{notes}"}}\n')
+    if updates or deletes:
+        wanted = "{" + ", ".join(f'"{u}"' for u, _, _ in updates) + "}"
+        doomed = "{" + ", ".join(f'"{u}"' for u in deletes) + "}"
+        body += f'''    set doomed to {{}}
+    repeat with e in (every event)
+      set u to uid of e
+      if u is in {doomed or "{}"} then set end of doomed to (contents of e)
+'''
+        for uid, title, notes in updates:
+            body += (f'      if u is "{uid}" then\n'
+                     f'        set summary of e to "{title}"\n'
+                     f'        set description of e to "{notes}"\n'
+                     f'      end if\n')
+        body += '''    end repeat
+    repeat with e in doomed
+      delete e
+    end repeat
+'''
+    if not body:
+        return
+    osa(MKDATE + f'''tell application "Calendar"
+  tell calendar "{CALENDAR}"
+{body}  end tell
+end tell''')
 
 
 def main(write):
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     wx = daytime_forecast()
+    have = existing()
+    creates, updates, keep = [], [], set()
+
     for when, height in low_tides(today, DAYS):
         if when < datetime.now():
             continue
@@ -150,22 +239,38 @@ def main(write):
         if why_not:
             print(f"  {when:%a %b %-d}  skip — {why_not}")
             continue
-        title = (f"{emoji(period)} Small Point — low tide {when:%-I:%M %p}, "
-                 f"{period['temperature']}°F {period['shortForecast']}")
-        notes = (f"Low tide {height:.1f} ft at {when:%-I:%M %p} (NOAA {STATION}). "
-                 f"{period['detailedForecast']}").replace('"', "'")
-        if not write:
-            print(f"  {when:%a %b %-d}  WOULD ADD  {title}")
-            continue
-        added = add_event(title, when - TIDE_PAD, when + TIDE_PAD, notes)
-        print(f"  {when:%a %b %-d}  {'added' if added else 'already there'}  {title}")
+        title, notes = describe(when, height, period)
+        start = when - TIDE_PAD
+        if start in have:
+            keep.add(start)
+            uid, old = have[start]
+            if old == title:
+                print(f"  {when:%a %b %-d}  unchanged  {title}")
+            else:
+                updates.append((uid, title, notes))
+                print(f"  {when:%a %b %-d}  UPDATE     {title}\n{'':>25}(was: {old})")
+        else:
+            creates.append((start, when + TIDE_PAD, title, notes))
+            print(f"  {when:%a %b %-d}  CREATE     {title}")
+
+    deletes = [uid for start, (uid, summary) in have.items() if start not in keep]
+    for start, (uid, summary) in sorted(have.items()):
+        if start not in keep:
+            print(f"  {start:%a %b %-d}  DELETE     {summary}")
+
     if not write:
-        print("\ndry run — rerun with --write to put these on the calendar")
+        print("\ndry run — rerun with --write to apply")
+        return
+    apply(creates, updates, deletes)
+    print(f"\n{len(creates)} created, {len(updates)} updated, {len(deletes)} deleted")
 
 
 def test():
-    p = lambda t, pop, sky="Sunny": {"temperature": t, "shortForecast": sky,
-                                     "probabilityOfPrecipitation": {"value": pop}}
+    def p(t, pop, sky="Sunny"):
+        return {"temperature": t, "shortForecast": sky, "detailedForecast": sky + ".",
+                "probabilityOfPrecipitation": {"value": pop}}
+    d = datetime(2026, 9, 20, 13, 0)
+
     assert emoji(p(75, 0)) == "🏖"
     assert emoji(p(58, 0)) == "😎"                          # cool but clear still surfaces
     assert emoji(p(75, 0, "Mostly Cloudy")) == "☁️"
@@ -176,16 +281,26 @@ def test():
     assert emoji(p(75, 0, "Patchy Fog")) == "🌫"
     assert emoji({"temperature": 75, "shortForecast": "Sunny",
                   "probabilityOfPrecipitation": None}) == "🏖"
-    d = datetime(2026, 9, 20, 13, 0)
+
     assert verdict(d, p(75, 10)) is None
     assert verdict(d.replace(hour=8), p(75, 10)) == "low tide at 8:00 AM"
     assert verdict(d.replace(hour=20), p(75, 10)) == "low tide at 8:00 PM"
     assert verdict(d, p(60, 10)) is None          # 60°F now surfaces
     assert verdict(d, p(50, 10)) == "only 50°F"
-    assert verdict(d, p(75, 60)) is None           # 60% rain now surfaces
+    assert verdict(d, p(75, 60)) is None          # 60% rain now surfaces
     assert verdict(d, p(75, 90)) == "90% chance of rain"
-    assert verdict(d, {"temperature": 75, "probabilityOfPrecipitation": None}) is None  # null pop
     assert verdict(d, None) == "beyond the forecast"
+
+    warm = d.replace(hour=17)
+    assert warm_water(warm, p(72, 0))                        # late ebb + sun
+    assert warm_water(warm, p(58, 0))                        # cool air, warm water anyway
+    assert not warm_water(warm, p(72, 0, "Rain Showers"))    # no sun, no soak
+    assert not warm_water(d.replace(hour=12), p(72, 0))      # midday low: marsh never baked
+    assert not warm_water(d.replace(hour=19), p(72, 0))      # past the window
+    assert describe(warm, 1.2, p(72, 0))[0].startswith("🏊")
+    assert "marsh filled" in describe(warm, 1.2, p(72, 0))[1]
+    assert describe(d, 1.2, p(72, 0))[0].startswith("🏖")
+
     assert asdate(datetime(2026, 9, 19, 9, 47)) == "(my mkdate(2026, 9, 19, 35220))"
     assert asdate(datetime(2026, 1, 31, 0, 0)) == "(my mkdate(2026, 1, 31, 0))"
     print("ok")
