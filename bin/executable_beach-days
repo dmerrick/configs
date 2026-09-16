@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""Put "good beach day" windows on the Maine calendar.
+
+Small Point beach is only walkable at low tide. This crosses NOAA tide predictions
+with the NWS forecast and writes one event per day where a low tide lands in a
+civilized window AND the weather is worth the drive.
+
+    beach-days            # dry run, prints what it would add
+    beach-days --write    # actually create the events
+    beach-days --test     # self-check, no network
+
+ponytail: no config file, no cache, no DB. Tune the constants below.
+"""
+import json, pathlib, subprocess, sys, urllib.request
+from datetime import datetime, timedelta
+
+# --- knobs -------------------------------------------------------------------
+STATION   = "8417177"          # NOAA Fort Popham, Hunniwell Point ME (~4 mi from Small Point)
+LATLON    = "43.7204,-69.8375" # Small Point beach. TODO(dana): confirm the coordinate.
+CALENDAR  = "Maine"
+DAYS      = 14                 # NWS only forecasts ~7; tides go the full range
+EARLIEST  = 11                 # Dana won't go before 11am
+LATEST    = 19                 # and not after dark
+MIN_TEMP  = 70                 # °F, NWS daytime high
+MAX_POP   = 30                 # % precip probability
+TIDE_PAD  = timedelta(hours=2) # event spans low tide ± this
+UA        = {"User-Agent": "beach-days (dana@caravel.bio)"}
+SEEN      = pathlib.Path.home() / ".beach-days-seen"   # events already created
+
+
+def get(url):
+    return json.load(urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30))
+
+
+def low_tides(start, days):
+    """[(datetime, height_ft)] for every low tide in the range."""
+    url = ("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions"
+           f"&datum=MLLW&station={STATION}&time_zone=lst_ldt&units=english&interval=hilo"
+           f"&begin_date={start:%Y%m%d}&end_date={start + timedelta(days=days):%Y%m%d}&format=json")
+    return [(datetime.strptime(p["t"], "%Y-%m-%d %H:%M"), float(p["v"]))
+            for p in get(url)["predictions"] if p["type"] == "L"]
+
+
+def daytime_forecast():
+    """{date: period} for the daytime NWS periods."""
+    fc = get(get(f"https://api.weather.gov/points/{LATLON}")["properties"]["forecast"])
+    return {datetime.fromisoformat(p["startTime"]).date(): p
+            for p in fc["properties"]["periods"] if p["isDaytime"]}
+
+
+def verdict(when, period):
+    """None if it's a good beach window, else the reason it isn't."""
+    if not EARLIEST <= when.hour < LATEST:
+        return f"low tide at {when:%-I:%M %p}"
+    if period is None:
+        return "beyond the forecast"
+    if period["temperature"] < MIN_TEMP:
+        return f"only {period['temperature']}°F"
+    pop = (period.get("probabilityOfPrecipitation") or {}).get("value") or 0
+    if pop > MAX_POP:
+        return f"{pop}% chance of rain"
+    return None
+
+
+def osa(script):
+    r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
+    if r.returncode:
+        sys.exit(f"osascript failed: {r.stderr.strip()}")
+    return r.stdout.strip()
+
+
+def add_event(title, start, end, notes):
+    """Idempotent via a seen-file: an AppleScript `whose summary is ...` query over
+    Calendar.app takes minutes, a one-line file takes none.
+    ponytail: delete SEEN to re-add everything."""
+    key = f"{start:%Y-%m-%d} {title}"
+    seen = SEEN.read_text().splitlines() if SEEN.exists() else []
+    if key in seen:
+        return False
+    fmt = "%Y-%m-%d %H:%M:%S"
+    osa(f'''tell application "Calendar"
+      tell calendar "{CALENDAR}"
+        make new event with properties {{summary:"{title}", start date:date "{start:{fmt}}", end date:date "{end:{fmt}}", description:"{notes}"}}
+      end tell
+    end tell''')
+    SEEN.write_text("\n".join(seen + [key]) + "\n")
+    return True
+
+
+def main(write):
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    wx = daytime_forecast()
+    for when, height in low_tides(today, DAYS):
+        if when < datetime.now():
+            continue
+        period = wx.get(when.date())
+        why_not = verdict(when, period)
+        if why_not:
+            print(f"  {when:%a %b %-d}  skip — {why_not}")
+            continue
+        title = f"🏖 Small Point — low tide {when:%-I:%M %p}"
+        notes = (f"Low tide {height:.1f} ft at {when:%-I:%M %p} (NOAA {STATION}). "
+                 f"{period['detailedForecast']}").replace('"', "'")
+        if not write:
+            print(f"  {when:%a %b %-d}  WOULD ADD  {title}  ({period['temperature']}°F)")
+            continue
+        added = add_event(title, when - TIDE_PAD, when + TIDE_PAD, notes)
+        print(f"  {when:%a %b %-d}  {'added' if added else 'already there'}  {title}")
+    if not write:
+        print("\ndry run — rerun with --write to put these on the calendar")
+
+
+def test():
+    p = lambda t, pop: {"temperature": t, "probabilityOfPrecipitation": {"value": pop}}
+    d = datetime(2026, 9, 20, 13, 0)
+    assert verdict(d, p(75, 10)) is None
+    assert verdict(d.replace(hour=8), p(75, 10)) == "low tide at 8:00 AM"
+    assert verdict(d.replace(hour=20), p(75, 10)) == "low tide at 8:00 PM"
+    assert verdict(d, p(60, 10)) == "only 60°F"
+    assert verdict(d, p(75, 80)) == "80% chance of rain"
+    assert verdict(d, {"temperature": 75, "probabilityOfPrecipitation": None}) is None  # null pop
+    assert verdict(d, None) == "beyond the forecast"
+    print("ok")
+
+
+if __name__ == "__main__":
+    test() if "--test" in sys.argv else main("--write" in sys.argv)
