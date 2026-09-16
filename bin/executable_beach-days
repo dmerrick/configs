@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 
 # --- knobs -------------------------------------------------------------------
 STATION   = "8417177"          # NOAA Fort Popham, Hunniwell Point ME (~4 mi from Small Point)
-LATLON    = "43.7204,-69.8375" # Small Point beach. TODO(dana): confirm the coordinate.
+LATLON    = "43.755,-69.785"   # the tide station itself (Hunniwell Point) — same NWS grid as the beach
 CALENDAR  = "Maine"
 DAYS      = 14                 # NWS only forecasts ~7; tides go the full range
 EARLIEST  = 11                 # Dana won't go before 11am
@@ -63,10 +63,35 @@ def verdict(when, period):
 
 
 def osa(script):
+    subprocess.run(["open", "-ga", "Calendar"], check=False)  # -600 if it isn't running
     r = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
     if r.returncode:
         sys.exit(f"osascript failed: {r.stderr.strip()}")
     return r.stdout.strip()
+
+
+def asdate(dt):
+    """An AppleScript date expression for `dt`.
+
+    ponytail: NOT `date "2026-09-19 09:47:00"` — AppleScript parses that
+    locale-dependently and silently produced October 9, year 12187. Setting the
+    components one at a time is the only unambiguous form. Day goes to 1 first so
+    setting month cannot overflow a 31st into the next month.
+    """
+    return f"(my mkdate({dt.year}, {dt.month}, {dt.day}, {dt.hour * 3600 + dt.minute * 60}))"
+
+
+MKDATE = """
+on mkdate(y, m, d, secs)
+  set dt to current date
+  set day of dt to 1
+  set year of dt to y
+  set month of dt to m
+  set day of dt to d
+  set time of dt to secs
+  return dt
+end mkdate
+"""
 
 
 def add_event(title, start, end, notes):
@@ -75,15 +100,15 @@ def add_event(title, start, end, notes):
     ponytail: delete SEEN to re-add everything."""
     key = f"{start:%Y-%m-%d} {title}"
     seen = SEEN.read_text().splitlines() if SEEN.exists() else []
-    if key in seen:
+    if any(line.endswith(key) for line in seen):
         return False
-    fmt = "%Y-%m-%d %H:%M:%S"
-    osa(f'''tell application "Calendar"
+    uid = osa(MKDATE + f'''tell application "Calendar"
       tell calendar "{CALENDAR}"
-        make new event with properties {{summary:"{title}", start date:date "{start:{fmt}}", end date:date "{end:{fmt}}", description:"{notes}"}}
+        set e to make new event with properties {{summary:"{title}", start date:{asdate(start)}, end date:{asdate(end)}, description:"{notes}"}}
+        return uid of e
       end tell
     end tell''')
-    SEEN.write_text("\n".join(seen + [key]) + "\n")
+    SEEN.write_text("\n".join(seen + [f"{uid}\t{key}"]) + "\n")
     return True
 
 
@@ -120,6 +145,8 @@ def test():
     assert verdict(d, p(75, 80)) == "80% chance of rain"
     assert verdict(d, {"temperature": 75, "probabilityOfPrecipitation": None}) is None  # null pop
     assert verdict(d, None) == "beyond the forecast"
+    assert asdate(datetime(2026, 9, 19, 9, 47)) == "(my mkdate(2026, 9, 19, 35220))"
+    assert asdate(datetime(2026, 1, 31, 0, 0)) == "(my mkdate(2026, 1, 31, 0))"
     print("ok")
 
 
