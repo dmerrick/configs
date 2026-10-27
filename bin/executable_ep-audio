@@ -78,7 +78,20 @@ def parse(path: Path) -> dict:
     }
 
 
-def convert(src: Path, outdir: Path, bitrate: str) -> str:
+def duck(intro: float, outro: float, end: float) -> str:
+    """Audio filter that drops the first `intro` and last `outro` seconds to -12 dB.
+
+    `end` is the source duration (only needed when outro > 0)."""
+    # shortcut: fixed -12 dB and a hard step, no fade; make it a flag if a show needs more.
+    spans = ([f"lt(t,{intro})"] if intro else []) + (
+        [f"gt(t,{end - outro})"] if outro else []
+    )
+    return f"volume=0.25:enable='{'+'.join(spans)}'"
+
+
+def convert(
+    src: Path, outdir: Path, bitrate: str, intro: float = 0, outro: float = 0
+) -> str:
     info = parse(src)
     label = (
         f"S{info['season']:02d}E{info['episode']:02d}" if info["episode"] else src.stem
@@ -126,6 +139,19 @@ def convert(src: Path, outdir: Path, bitrate: str) -> str:
         "-f",
         "ipod",  # the .part suffix hides the m4a muxer from ffmpeg
     ]
+    if intro or outro:
+        end = 0.0
+        if outro:
+            r = subprocess.run(
+                ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                 "-of", "csv=p=0", str(src)],
+                capture_output=True,
+                text=True,
+            )
+            if r.returncode or not r.stdout.strip():
+                return f"FAIL  {src.name}: ffprobe gave no duration"
+            end = float(r.stdout)
+        cmd += ["-af", duck(intro, outro, end)]
     for k, v in tags.items():
         cmd += ["-metadata", f"{k}={v}"]
     cmd.append(str(tmp))
@@ -138,11 +164,11 @@ def convert(src: Path, outdir: Path, bitrate: str) -> str:
     return f"ok    {dst.name}  ({dst.stat().st_size // 1024 // 1024}MB)"
 
 
-def convert_safe(src: Path, outdir: Path, bitrate: str) -> str:
+def convert_safe(src: Path, outdir: Path, bitrate: str, intro: float, outro: float) -> str:
     # ponytail: one OSError (a network share dropping mid-run) must not take the whole
     # pool down -- pool.map re-raises, killing every encode that hadn't started yet.
     try:
-        return convert(src, outdir, bitrate)
+        return convert(src, outdir, bitrate, intro, outro)
     except OSError as e:
         return f"FAIL  {src.name}: {e}"
 
@@ -175,6 +201,8 @@ def selftest():
         "episode": 0,
         "title": "Some Special",
     }, p
+    assert duck(45, 30, 1320) == "volume=0.25:enable='lt(t,45)+gt(t,1290)'"
+    assert duck(45, 0, 0) == "volume=0.25:enable='lt(t,45)'"
     print("selftest ok")
 
 
@@ -191,6 +219,14 @@ def main():
     )
     ap.add_argument(
         "-j", "--jobs", type=int, default=max(1, (os.cpu_count() or 4) // 2)
+    )
+    ap.add_argument(
+        "--quiet-intro", type=float, default=0, metavar="SEC",
+        help="drop the first SEC seconds to -12 dB (theme music)",
+    )
+    ap.add_argument(
+        "--quiet-outro", type=float, default=0, metavar="SEC",
+        help="drop the last SEC seconds to -12 dB (credits)",
     )
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
@@ -219,7 +255,12 @@ def main():
     print(f"{len(srcs)} episodes -> {outdir}")
 
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
-        for line in pool.map(lambda s: convert_safe(s, outdir, args.bitrate), srcs):
+        for line in pool.map(
+            lambda s: convert_safe(
+                s, outdir, args.bitrate, args.quiet_intro, args.quiet_outro
+            ),
+            srcs,
+        ):
             print(line, flush=True)
 
 
