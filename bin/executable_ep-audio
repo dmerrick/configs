@@ -12,6 +12,9 @@ import os
 import re
 import subprocess
 import sys
+import urllib.request
+import xml.etree.ElementTree as ET
+from functools import partial
 from pathlib import Path
 
 VIDEO_EXT = {".mkv", ".mp4", ".avi", ".m4v", ".mov", ".ts", ".wmv", ".mpg", ".webm"}
@@ -89,8 +92,57 @@ def duck(intro: float, outro: float, end: float) -> str:
     return f"volume=0.25:enable='{'+'.join(spans)}'"
 
 
+def cut(spans: list) -> str:
+    """Audio filter that removes each (start, end) second span outright."""
+    gaps = "+".join(f"between(t,{a},{b})" for a, b in spans)
+    return f"aselect='not({gaps})',asetpts=N/SR/TB"
+
+
+def plex_get(base: str, token: str, path: str) -> ET.Element:
+    sep = "&" if "?" in path else "?"
+    with urllib.request.urlopen(f"{base}{path}{sep}X-Plex-Token={token}", timeout=120) as r:
+        return ET.parse(r).getroot()
+
+
+def plex_index(base: str, token: str) -> tuple:
+    """Every episode Plex knows: {file path: ratingKey} and {basename: [ratingKey]}."""
+    by_path, by_name = {}, {}
+    for sec in plex_get(base, token, "/library/sections").iter("Directory"):
+        if sec.get("type") != "show":
+            continue
+        for v in plex_get(base, token, f"/library/sections/{sec.get('key')}/all?type=4").iter("Video"):
+            for part in v.iter("Part"):
+                f = part.get("file", "")
+                by_path[f] = v.get("ratingKey")
+                by_name.setdefault(Path(f).name, []).append(v.get("ratingKey"))
+    return by_path, by_name
+
+
+def plex_markers(base: str, token: str, index: tuple, src: Path):
+    """Intro + credits spans in seconds; None if Plex doesn't have this file."""
+    by_path, by_name = index
+    # shortcut: full-path match first, else a unique basename; two shows sharing a
+    # filename and a different mount point gets no match rather than a wrong one.
+    rk = by_path.get(str(src)) or (
+        by_name[src.name][0] if len(by_name.get(src.name, [])) == 1 else None
+    )
+    if not rk:
+        return None
+    # the bulk listings ignore includeMarkers; only the per-item fetch carries them
+    return [
+        (int(m.get("startTimeOffset")) / 1000, int(m.get("endTimeOffset")) / 1000)
+        for m in plex_get(base, token, f"/library/metadata/{rk}?includeMarkers=1").iter("Marker")
+        if m.get("type") in ("intro", "credits")
+    ]
+
+
 def convert(
-    src: Path, outdir: Path, bitrate: str, intro: float = 0, outro: float = 0
+    src: Path,
+    outdir: Path,
+    bitrate: str,
+    intro: float = 0,
+    outro: float = 0,
+    markers=None,
 ) -> str:
     info = parse(src)
     label = (
@@ -139,7 +191,15 @@ def convert(
         "-f",
         "ipod",  # the .part suffix hides the m4a muxer from ffmpeg
     ]
-    if intro or outro:
+    note = ""
+    spans = markers(src) if markers else None
+    if spans:
+        note = f"  cut {sum(b - a for a, b in spans):.0f}s"
+    elif markers:
+        note = "  no plex match" if spans is None else "  no plex markers"
+    if spans:
+        cmd += ["-af", cut(spans)]
+    elif intro or outro:
         end = 0.0
         if outro:
             r = subprocess.run(
@@ -161,14 +221,14 @@ def convert(
         tmp.unlink(missing_ok=True)
         return f"FAIL  {src.name}: {r.stderr.strip().splitlines()[-1] if r.stderr.strip() else '?'}"
     tmp.rename(dst)
-    return f"ok    {dst.name}  ({dst.stat().st_size // 1024 // 1024}MB)"
+    return f"ok    {dst.name}  ({dst.stat().st_size // 1024 // 1024}MB){note}"
 
 
-def convert_safe(src: Path, outdir: Path, bitrate: str, intro: float, outro: float) -> str:
+def convert_safe(src: Path, outdir: Path, bitrate: str, intro: float, outro: float, markers) -> str:
     # ponytail: one OSError (a network share dropping mid-run) must not take the whole
     # pool down -- pool.map re-raises, killing every encode that hadn't started yet.
     try:
-        return convert(src, outdir, bitrate, intro, outro)
+        return convert(src, outdir, bitrate, intro, outro, markers)
     except OSError as e:
         return f"FAIL  {src.name}: {e}"
 
@@ -203,6 +263,9 @@ def selftest():
     }, p
     assert duck(45, 30, 1320) == "volume=0.25:enable='lt(t,45)+gt(t,1290)'"
     assert duck(45, 0, 0) == "volume=0.25:enable='lt(t,45)'"
+    assert cut([(0, 45.5), (1290, 1320)]) == (
+        "aselect='not(between(t,0,45.5)+between(t,1290,1320))',asetpts=N/SR/TB"
+    )
     print("selftest ok")
 
 
@@ -228,6 +291,11 @@ def main():
         "--quiet-outro", type=float, default=0, metavar="SEC",
         help="drop the last SEC seconds to -12 dB (credits)",
     )
+    ap.add_argument(
+        "--plex", metavar="URL",
+        help="cut the intro/credits Plex detected (token from $PLEX_TOKEN); "
+        "overrides --quiet-* where Plex has markers",
+    )
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
 
@@ -252,12 +320,20 @@ def main():
     if stale:
         print(f"cleaned {len(stale)} stale .part file(s)")
 
+    markers = None
+    if args.plex:
+        token = os.environ.get("PLEX_TOKEN") or ap.error("--plex needs $PLEX_TOKEN")
+        base = args.plex.rstrip("/")
+        index = plex_index(base, token)
+        print(f"plex: {len(index[0])} episodes indexed")
+        markers = partial(plex_markers, base, token, index)
+
     print(f"{len(srcs)} episodes -> {outdir}")
 
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
         for line in pool.map(
             lambda s: convert_safe(
-                s, outdir, args.bitrate, args.quiet_intro, args.quiet_outro
+                s, outdir, args.bitrate, args.quiet_intro, args.quiet_outro, markers
             ),
             srcs,
         ):
