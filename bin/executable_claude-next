@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# claude-next [prompt] — open a Claude window in the ADanaLife tmux session and attach.
+#
+# The remote end of tempomat's "Fix in terminal": Blink opens
+# `mosh <mac> -- claude-next '/rebase-prs tempomat 560'` over Dana's own SSH key,
+# and this script decides what runs. The prompt must match the allowlist below
+# — anything else is refused and the session just attaches, so the worst a
+# wrong caller can do is pick a different allowlisted prompt. No argument: attach.
+set -euo pipefail
+
+# mosh-server runs this with sshd's bare PATH.
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
+session=ADanaLife
+dir="$HOME/adanalife"
+
+prompt="${1:-}"
+if [ -n "$prompt" ]; then
+  if [[ $prompt =~ ^/(clock-in|sweep-todos|rebase-prs|rebase-prs\ [a-z0-9-]+\ [0-9]+)$ ]]; then
+    tmux has-session -t "$session" 2>/dev/null || tmux new-session -d -s "$session" -c "$dir"
+    name="${prompt#/}"; name="${name%% *}"
+    tmux new-window -t "$session" -c "$dir" -n "$name" "claude '$prompt'; exec \$SHELL"
+  else
+    echo "claude-next: refused '$prompt' (not an allowlisted prompt)" >&2
+    sleep 2
+  fi
+fi
+exec tmux attach -t "$session"
