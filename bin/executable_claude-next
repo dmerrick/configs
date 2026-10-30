@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# claude-next [prompt] — open a Claude window in the ADanaLife tmux session and attach.
+# claude-next [prompt [session]] — open a Claude window in a tmux session (ADanaLife
+# unless named) and attach.
 #
 # The remote end of tempomat's "Fix in terminal": Blink opens
 # `mosh <mac> -- claude-next '/rebase-prs tempomat 560'` over Dana's own SSH key,
@@ -10,8 +11,14 @@ set -euo pipefail
 
 # mosh-server runs this with sshd's bare PATH.
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
-session=ADanaLife
+session="${2:-ADanaLife}"
 dir="$HOME/adanalife"
+# The session name reaches tmux's target syntax, so only a plain name is taken.
+if [[ ! $session =~ ^[A-Za-z0-9_-]+$ ]]; then
+  echo "claude-next: refused session '$session'" >&2
+  sleep 2
+  session=ADanaLife
+fi
 
 prompt="${1:-}"
 if [ -n "$prompt" ]; then
