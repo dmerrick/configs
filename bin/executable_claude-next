@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# claude-next [prompt [session [stamp]]] — open a Claude window in a tmux session (ADanaLife
-# unless named) and attach.
+# claude-next [session stamp prompt...] — open a Claude window in a tmux session
+# and attach.
 #
 # The remote end of tempomat's "Fix in terminal": Blink opens
-# `mosh <mac> -- claude-next '/rebase-prs tempomat 560'` over Dana's own SSH key,
+# `mosh <mac> -- claude-next ADanaLife <unix time> /rebase-prs tempomat 560` over Dana's own SSH key,
 # and this script decides what runs. The prompt must match the allowlist below
 # — anything else is refused and the session just attaches, so the worst a
 # wrong caller can do is pick a different allowlisted prompt. No argument: attach.
@@ -11,7 +11,14 @@ set -euo pipefail
 
 # mosh-server runs this with sshd's bare PATH.
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
-session="${2:-ADanaLife}"
+# Blink and mosh's remote shell each strip a layer of quotes, so the prompt can
+# arrive split into words; it goes last and every word after the stamp is joined.
+if [[ ${1:-} == /* ]]; then
+  # Builds before the stamp: claude-next '<prompt>' [session]
+  prompt="$1" session="${2:-ADanaLife}" stamp=""
+else
+  session="${1:-ADanaLife}" stamp="${2:-}" prompt="${*:3}"
+fi
 dir="$HOME/adanalife"
 # The session name reaches tmux's target syntax, so only a plain name is taken.
 if [[ ! $session =~ ^[A-Za-z0-9_-]+$ ]]; then
@@ -20,10 +27,8 @@ if [[ ! $session =~ ^[A-Za-z0-9_-]+$ ]]; then
   session=ADanaLife
 fi
 
-prompt="${1:-}"
 # tempomat stamps each tap with its Unix time. Blink re-runs a tab's command line
 # when it restores the tab, so an old stamp is a restore, not a tap: attach only.
-stamp="${3:-}"
 if [ -n "$prompt" ]; then
   verdict=run
   if [ -z "$stamp" ]; then
