@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# claude-next [prompt [session]] — open a Claude window in a tmux session (ADanaLife
+# claude-next [prompt [session [stamp]]] — open a Claude window in a tmux session (ADanaLife
 # unless named) and attach.
 #
 # The remote end of tempomat's "Fix in terminal": Blink opens
@@ -21,6 +21,23 @@ if [[ ! $session =~ ^[A-Za-z0-9_-]+$ ]]; then
 fi
 
 prompt="${1:-}"
+# tempomat stamps each tap with its Unix time. Blink re-runs a tab's command line
+# when it restores the tab, so an old stamp is a restore, not a tap: attach only.
+stamp="${3:-}"
+if [ -n "$prompt" ]; then
+  verdict=run
+  if [ -z "$stamp" ]; then
+    verdict=unstamped # shortcut: builds before the stamp still run, refuse once every device has updated
+  elif [[ ! $stamp =~ ^[0-9]+$ ]] || (( $(date +%s) - stamp > 120 )); then
+    verdict=replay
+  fi
+  echo "$(date '+%F %T') $verdict stamp=${stamp:--} '$prompt' $session" >>"$HOME/Library/Logs/claude-next.log"
+  if [ "$verdict" = replay ]; then
+    echo "claude-next: '$prompt' was tapped more than 2 minutes ago (a Blink restore); attaching" >&2
+    sleep 2
+    prompt=""
+  fi
+fi
 if [ -n "$prompt" ]; then
   if [[ $prompt =~ ^/(clock-in|sweep-todos|rebase-prs|rebase-prs\ [a-z0-9-]+\ [0-9]+)$ ]]; then
     tmux has-session -t "$session" 2>/dev/null || tmux new-session -d -s "$session" -c "$dir"
