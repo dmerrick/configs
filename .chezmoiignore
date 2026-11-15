@@ -9,3 +9,11 @@ runlist.md
 .finicky.js
 Documents
 {{- end }}
+
+{{ if eq .profile "minimal" -}}
+# minimal profile (headless, SSH-only) — no GUI apps or menu-bar plugins
+.hammerspoon
+.finicky.js
+Documents
+.config/ghostty
+{{- end }}

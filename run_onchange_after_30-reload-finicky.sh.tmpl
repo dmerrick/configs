@@ -1,5 +1,5 @@
 #!/bin/bash
-{{ if eq .chezmoi.os "darwin" -}}
+{{ if and (eq .chezmoi.os "darwin") (ne .profile "minimal") -}}
 # finicky config hash: {{ include "dot_finicky.js" | sha256sum }}
 # Finicky's config watcher misses chezmoi's atomic rename, so it keeps serving
 # the stale bundled config until restarted.

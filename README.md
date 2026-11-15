@@ -17,6 +17,16 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply dmerrick/configs
 On Linux (e.g. the seedbox) the macOS-only configs — Hammerspoon, Finicky,
 SwiftBar — are skipped automatically via `.chezmoiignore`.
 
+## Profiles
+
+`.chezmoi.toml.tmpl` sets `.profile` from the hostname: `minimal` for the
+headless boxes listed in `$minimalHosts` (currently `dmerrick-empty`), `full`
+everywhere else. The minimal profile skips the GUI configs (Hammerspoon,
+Finicky, SwiftBar, Ghostty), the macOS defaults script, and every cask in the
+Brewfile's `unless ENV["CHEZMOI_PROFILE"] == "minimal"` block. To add a host,
+append it to `$minimalHosts` and run `chezmoi init` on that box to regenerate
+its config.
+
 ## Day-to-day
 
 - `chezmoi edit ~/.zshrc` — edit a managed file (edits the source copy)

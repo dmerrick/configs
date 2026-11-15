@@ -1,0 +1,11 @@
+{{- /* "minimal" is for headless boxes reached over SSH: shell, git, tmux, editor
+       and k8s tooling, but no GUI apps, menu-bar plugins or macOS defaults. */ -}}
+{{- $minimalHosts := list "dmerrick-empty" -}}
+{{- $profile := "full" -}}
+{{- if has .chezmoi.hostname $minimalHosts -}}
+{{-   $profile = "minimal" -}}
+{{- end -}}
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
+[data]
+    profile = {{ $profile | quote }}
