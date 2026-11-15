@@ -128,3 +128,23 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Keep k9s config in the dotfiles repo (config.yaml + aliases.yaml tracked there)
 export K9S_CONFIG_DIR="$HOME/.config/k9s"
+
+# libvlc (tripbot cgo) — lets bare `go build/test/run` (and `mise exec -- go`)
+# find VLC.app's bundled headers/libs without per-command CGO flags.
+# See ~/adanalife/vault/tripbot/vlc-server/gotchas.md for why rpath/-Wno-error.
+if [ -d /Applications/VLC.app ]; then
+  export CGO_CFLAGS="-I/Applications/VLC.app/Contents/MacOS/include"
+  export CGO_LDFLAGS="-L/Applications/VLC.app/Contents/MacOS/lib -Wl,-rpath,/Applications/VLC.app/Contents/MacOS/lib -Wno-error=incompatible-function-pointer-types"
+fi
+
+# aws-vault keeps credentials in an encrypted file rather than the macOS keychain.
+# Keychain items are ACL-locked to the unsigned aws-vault binary, so reading one
+# needs a confirmation dialog that an SSH session can't display; the default
+# keychain backend fails with "item could not be found in the keyring".
+# See ~/adanalife/vault/infra/aws-accounts.md for the diagnosis.
+export AWS_VAULT_BACKEND=file
+
+# mise shims LAST on PATH so globally-installed mise tools (aws) resolve for child
+# processes like `aws-vault exec -- aws`, while brew/system keep priority for
+# go/python/terraform — mise is driven explicitly here via `mise exec --`.
+export PATH="$PATH:$HOME/.local/share/mise/shims"
